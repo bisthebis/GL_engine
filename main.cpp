@@ -19,7 +19,7 @@ int main()
 	glewInit();
 
 
-	GLfloat triangle[] = {0, 0.5, 0.5, -0.5, -0.5, -0.5};
+	GLfloat triangle[] = {0, 0, 0.5, -0.5, -0.5, -0.5};
 
 	while (window.isOpen())
 	{
