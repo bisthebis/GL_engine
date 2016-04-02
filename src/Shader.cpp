@@ -9,4 +9,14 @@ Shader::~Shader()
 
 }
 
+void Shader::compileShader(GLuint& shader, GLenum type, const std::string& file)
+{
+	
+	
+}
 
+void Shader::charger()
+{
+	
+	
+}
