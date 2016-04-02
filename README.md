@@ -1,3 +1,3 @@
 # GL engine
 
-Projet courant de tests divers
+Projet courant de tests divers et expérimentations openGL
