@@ -24,10 +24,10 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 		std::cerr << "Fichier introuvable ! " << file << std::endl;
 	
 	std::string ligne;
-    std::string Source;
+	std::string Source;
 	
 
-    while(std::getline(fichier, ligne))
+	while(std::getline(fichier, ligne))
         Source += ligne + '\n';
 	
 	fichier.close();
@@ -38,30 +38,28 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 	glCompileShader(shader);
 	
 	GLint erreurCompilation(0);
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &erreurCompilation);
+	glGetShaderiv(shader, GL_COMPILE_STATUS, &erreurCompilation);
 
-    if(erreurCompilation != GL_TRUE)
-    {
-
-
-        GLint tailleErreur(0);
-        glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &tailleErreur);
+	if(erreurCompilation != GL_TRUE)
+	{
 
 
-        std::string erreur;
-		erreur.resize(tailleErreur+1);
+	GLint tailleErreur(0);
+	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &tailleErreur);
+
+	std::string erreur;			
+	erreur.resize(tailleErreur+1);
 
 
 
-        glGetShaderInfoLog(shader, tailleErreur, &tailleErreur, &erreur[0]);
+	glGetShaderInfoLog(shader, tailleErreur, &tailleErreur, &erreur[0]);
         erreur[tailleErreur] = '\0';
 
-        std::cerr << erreur << std::endl;
-		
-        glDeleteShader(shader);
+	std::cerr << erreur << std::endl;
+	glDeleteShader(shader);
 
         ///THROW EXCEPTION
-    }
+	}
 	
 	
 }
