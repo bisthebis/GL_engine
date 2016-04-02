@@ -5,6 +5,8 @@
 #include <iostream>
 #include <SFML/Window.hpp>
 
+#include "../include/Shader.h"
+
 int main()
 {
 	sf::ContextSettings settings;
