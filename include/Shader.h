@@ -20,8 +20,8 @@ class Shader
 		Shader(const std::string& vert, const std::string& frag) : vertexSource(vert), fragmentSource(frag) {} //Construire depuis deux fichiers
 		Shader(const Shader& src) : vertexSource(src.vertexSource), fragmentSource(src.fragmentSource) {charger();} //constructeur de copie
 		Shader(Shader&& src){std::swap(vertexSource, src.vertexSource); std::swap(fragmentSource, src.fragmentSource); ID = src.ID; src.ID = 0; /*afin d'éviter que le programme ne soit détruit */} //Constructeur de déplacement
-		Shader& operator= (const Shader& src) {vertexSource = src.vertexSource; fragmentSource = src.fragmentSource; charger();} //Assignement de copie
-		Shader& operator= (Shader&&) {std::swap(vertexSource, src.vertexSource); std::swap(fragmentSource, src.fragmentSource); ID = src.ID; src.ID = 0; /*afin d'éviter que le programme ne soit détruit */} //Assignement de déplacement
+		Shader& operator= (const Shader& src) {vertexSource = src.vertexSource; fragmentSource = src.fragmentSource; charger(); return *this;} //Assignement de copie
+		Shader& operator= (Shader&& src) {std::swap(vertexSource, src.vertexSource); std::swap(fragmentSource, src.fragmentSource); ID = src.ID; src.ID = 0; return *this; /*afin d'éviter que le programme ne soit détruit */} //Assignement de déplacement
 		~Shader(); //Destructeur
 		
 		GLuint getProgramID() const {return ID;}

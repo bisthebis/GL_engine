@@ -20,6 +20,9 @@ int main()
 	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
 
+	Shader shader("Shaders/base.vert", "Shaders/base.frag");
+	shader.charger();
+	glUseProgram(shader.getProgramID());
 
 	GLfloat triangle[] = {0, 0, 0.5, -0.5, -0.5, -0.5};
 

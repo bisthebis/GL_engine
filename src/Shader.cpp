@@ -60,12 +60,22 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 
         ///THROW EXCEPTION
 	}
-	
+	return shader;	
 	
 }
 
 void Shader::charger()
 {
-	
-	
+	GLuint vertex = compileShader(GL_VERTEX_SHADER, vertexSource);	
+	GLuint fragment = compileShader(GL_FRAGMENT_SHADER, fragmentSource);	
+
+	ID = glCreateProgram();
+
+	glAttachShader(ID, vertex);
+	glAttachShader(ID, fragment);
+
+	glLinkProgram(ID);
+
+	glDeleteShader(vertex);
+	glDeleteShader(fragment);	
 }
