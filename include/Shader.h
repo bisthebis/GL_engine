@@ -15,7 +15,7 @@ class Shader
 		std::string vertexSource;
 		std::string fragmentSource;		
 		
-		void compileShader(GLuint& shader, GLenum type, const std::string& file); //Gère la compilation d'un shader et lance les exceptions adéquates en cas d'erreur
+		GLuint compileShader(GLenum type, const std::string& file); //Gère la compilation d'un shader et lance les exceptions adéquates en cas d'erreur. Retourne ledit shader
 	public: 
 		Shader(const std::string& vert, const std::string& frag) : vertexSource(vert), fragmentSource(frag) {} //Construire depuis deux fichiers
 		Shader(const Shader& src) : vertexSource(src.vertexSource), fragmentSource(src.fragmentSource) {charger();} //constructeur de copie
