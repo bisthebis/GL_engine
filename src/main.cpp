@@ -13,6 +13,7 @@
 
 #include "../include/Shader.h"
 #include "../include/MyException.h"
+#include "../include/Texture.h"
 
 #include "../include/easylogging++.h"
 
@@ -32,7 +33,7 @@ int main()
 	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
 
-	GL::Shader shader("Shaders/color2D.vert", "Shaders/color2D.frag");
+	GL::Shader shader("Shaders/Texture2D.vert", "Shaders/Texture2D.frag");
 	try
 	{
 		shader.charger();
@@ -45,10 +46,14 @@ int main()
 	}
 	glUseProgram(shader.getProgramID());
 
-	GLfloat triangle[] = {0, 0, 0.5, -0.5, -0.5, -0.5};
-	GLfloat color[] = {1,0,0,
-										0,1,0,
-										0,0,1};
+	GL::Texture text;
+	text.loadFromFile("cat.png");
+	glBindTexture(GL_TEXTURE_2D, text.TextureID);
+
+
+
+	GLfloat triangle[] = {-1, 1,  1,1, -1,-1,  1, -1};
+	GLfloat UVs[] = {0,1,  1,1, 0,0, 1,0};
 
 	glm::vec2 translation(0,1);
 
@@ -85,13 +90,13 @@ int main()
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, triangle);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, color);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, UVs);
 	glEnableVertexAttribArray(1);
 
 	translation.x = 0.5*sin(time.getElapsedTime().asSeconds());
 	glUniform2f(0, translation.x, translation.y);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);

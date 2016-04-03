@@ -1,0 +1,7 @@
+pull.sh
+push.sh
+*.o
+Programme
+logs
+./logs/*
+gingercat.jpg
