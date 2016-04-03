@@ -11,7 +11,7 @@ Shader::Shader(const std::string& vert, const std::string& frag) : vertexSource(
 
 }
 
-Shader::Shader(const Shader& src)  : vertexSource(src.vertexSource), fragmentSource(src.fragmentSource)
+Shader::Shader(const Shader& src)	: vertexSource(src.vertexSource), fragmentSource(src.fragmentSource)
 {
 	charger();
 }
@@ -68,7 +68,7 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 
 
 	while(std::getline(fichier, ligne))
-        Source += ligne + '\n';
+				Source += ligne + '\n';
 
 	fichier.close();
 
@@ -91,11 +91,11 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 	erreur.resize(tailleErreur+1);
 
 	glGetShaderInfoLog(shader, tailleErreur, &tailleErreur, &erreur[0]);
-        erreur[tailleErreur] = '\0';
+				erreur[tailleErreur] = '\0';
 
 	glDeleteShader(shader);
 
-        throw MyException(file + " couldn't be compiled. Error : " + erreur);
+				throw MyException(file + " couldn't be compiled. Error : " + erreur);
 	}
 	return shader;
 
