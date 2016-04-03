@@ -7,6 +7,10 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 
+#include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include "../include/Shader.h"
 #include "../include/MyException.h"
 
@@ -46,6 +50,9 @@ int main()
 										0,1,0,
 										0,0,1};
 
+	glm::vec2 translation(0,1);
+
+
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -81,7 +88,8 @@ int main()
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, color);
 	glEnableVertexAttribArray(1);
 
-	glUniform1f(0, 0.5 + 0.5*sin(time.getElapsedTime().asSeconds()));
+	translation.x = 0.5*sin(time.getElapsedTime().asSeconds());
+	glUniform2f(0, translation.x, translation.y);
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
