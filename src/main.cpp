@@ -3,7 +3,9 @@
 #include <GL/gl.h>
 
 #include <iostream>
+#include <cmath>
 #include <SFML/Window.hpp>
+#include <SFML/System.hpp>
 
 #include "../include/Shader.h"
 #include "../include/MyException.h"
@@ -21,6 +23,7 @@ int main()
 	settings.majorVersion = 4;
 	settings.minorVersion = 5;
 
+	sf::Clock time;
 
 	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
@@ -29,10 +32,11 @@ int main()
 	try
 	{
 		shader.charger();
+		LOG(INFO) << "shader chargé avec succès.";
 	}
 	catch (const std::exception& e)
 	{
-		LOG(INFO) << "Erreur de chargement du shader";
+		LOG(INFO) << "Erreur de chargement du shader : " << e.what();
 
 	}
 	glUseProgram(shader.getProgramID());
@@ -76,6 +80,8 @@ int main()
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, color);
 	glEnableVertexAttribArray(1);
+
+	glUniform1f(0, 0.5 + 0.5*sin(time.getElapsedTime().asSeconds()));
 
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
