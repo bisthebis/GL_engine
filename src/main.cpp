@@ -28,7 +28,6 @@ int main()
 	settings.majorVersion = 4;
 	settings.minorVersion = 5;
 
-	sf::Clock time;
 
 	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
@@ -55,8 +54,8 @@ int main()
 	GLfloat triangle[] = {-1, 1,  1,1, -1,-1,  1, -1};
 	GLfloat UVs[] = {0,1,  1,1, 0,0, 1,0};
 
-	glm::vec2 translation(0,1);
-
+	//glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 10.0f);
+	glm::mat4 projection(1.0f);
 
 	while (window.isOpen())
 	{
@@ -78,6 +77,10 @@ int main()
 
 				case sf::Event::Resized:
 				glViewport(0, 0, event.size.width, event.size.height);
+				//projection = glm::ortho(float(event.size.width)/-100, float(event.size.width)/100, float(event.size.height)/-100, float(event.size.height)/100, 0.1f, 100.0f);
+				projection = glm::ortho(-2.0f,2.0f,-2.0f,2.0f,0.1f,10.0f);
+
+				break;
 
 				default:
 				break;
@@ -93,9 +96,7 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, UVs);
 	glEnableVertexAttribArray(1);
 
-	translation.x = 0.5*sin(time.getElapsedTime().asSeconds());
-	glUniform2f(0, translation.x, translation.y);
-
+	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 	glDisableVertexAttribArray(1);
