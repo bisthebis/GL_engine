@@ -95,7 +95,7 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 	std::cerr << erreur << std::endl;
 	glDeleteShader(shader);
 
-        ///THROW EXCEPTION
+        throw MyException(file + " couldn't be compiled. Error : " + erreur);
 	}
 	return shader;
 
