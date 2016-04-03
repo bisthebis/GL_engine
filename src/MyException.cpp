@@ -2,7 +2,11 @@
 #include <fstream>
 #include <iostream>
 
+#include "../include/easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
+
 MyException::MyException(const std::string& err) : error(err)
 {
-	std::cerr << "Creation d'exception : " << err << std::endl;
+	LOG(ERROR) << err;
 }
