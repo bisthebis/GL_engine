@@ -13,22 +13,22 @@ class Shader
 	private:
 		GLuint ID = 0;
 		std::string vertexSource;
-		std::string fragmentSource;		
-		
+		std::string fragmentSource;
+
 		GLuint compileShader(GLenum type, const std::string& file); //Gère la compilation d'un shader et lance les exceptions adéquates en cas d'erreur. Retourne ledit shader
-	public: 
-		Shader(const std::string& vert, const std::string& frag) : vertexSource(vert), fragmentSource(frag) {} //Construire depuis deux fichiers
-		Shader(const Shader& src) : vertexSource(src.vertexSource), fragmentSource(src.fragmentSource) {charger();} //constructeur de copie
-		Shader(Shader&& src){std::swap(vertexSource, src.vertexSource); std::swap(fragmentSource, src.fragmentSource); ID = src.ID; src.ID = 0; /*afin d'éviter que le programme ne soit détruit */} //Constructeur de déplacement
-		Shader& operator= (const Shader& src) {vertexSource = src.vertexSource; fragmentSource = src.fragmentSource; charger(); return *this;} //Assignement de copie
-		Shader& operator= (Shader&& src) {std::swap(vertexSource, src.vertexSource); std::swap(fragmentSource, src.fragmentSource); ID = src.ID; src.ID = 0; return *this; /*afin d'éviter que le programme ne soit détruit */} //Assignement de déplacement
-		~Shader(); //Destructeur
-		
+	public:
+		Shader(const std::string& vert, const std::string& frag);
+		Shader(const Shader& src);
+		Shader(Shader&& src);
+		Shader& operator= (const Shader& src);
+		Shader& operator= (Shader&& src);
+		~Shader();
+
 		GLuint getProgramID() const {return ID;}
-		
-		void charger(); //Doit appeler "compileShader" pour compiler les deux shaders, puis les linker et signaler les erreurs de Link. 
+
+		void charger(); //Doit appeler "compileShader" pour compiler les deux shaders, puis les linker et signaler les erreurs de Link.
 			//Contrat : IN : deux strings valables comme chemins de fichier, OUT : ID représente un programme valide
-	
+
 
 
 

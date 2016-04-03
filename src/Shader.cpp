@@ -3,6 +3,43 @@
 #include <iostream>
 #include <fstream>
 
+
+Shader::Shader(const std::string& vert, const std::string& frag) : vertexSource(vert), fragmentSource(frag)
+{
+
+}
+
+Shader::Shader(const Shader& src)  : vertexSource(src.vertexSource), fragmentSource(src.fragmentSource)
+{
+	charger();
+}
+
+Shader::Shader(Shader&& src)
+{
+	std::swap(vertexSource, src.vertexSource);
+	std::swap(fragmentSource, src.fragmentSource);
+	ID = src.ID;
+	src.ID = 0; /*afin d'éviter que le programme ne soit détruit */
+}
+
+Shader& Shader::operator= (const Shader& src)
+{
+	vertexSource = src.vertexSource;
+	fragmentSource = src.fragmentSource;
+	charger();
+	return *this;
+}
+
+Shader& Shader::operator= (Shader&& src)
+{
+	std::swap(vertexSource, src.vertexSource);
+	std::swap(fragmentSource, src.fragmentSource);
+	ID = src.ID;
+	src.ID = 0;
+
+	return *this; /*afin d'éviter que le programme ne soit détruit */
+}
+
 Shader::~Shader()
 {
 	if(glIsProgram(ID))
@@ -16,27 +53,27 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 	GLuint shader = glCreateShader(type);
 	if(!shader)
 		std::cerr << "Type de shader incompatible ! " << std::endl;
-	
+
 	std::ifstream fichier;
 	fichier.open(file);
-	
+
 	if(!fichier)
 		std::cerr << "Fichier introuvable ! " << file << std::endl;
-	
+
 	std::string ligne;
 	std::string Source;
-	
+
 
 	while(std::getline(fichier, ligne))
         Source += ligne + '\n';
-	
+
 	fichier.close();
-	
+
 	const GLchar* code = Source.c_str();
-	
+
 	glShaderSource(shader, 1, &code, 0);
 	glCompileShader(shader);
-	
+
 	GLint erreurCompilation(0);
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &erreurCompilation);
 
@@ -47,7 +84,7 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 	GLint tailleErreur(0);
 	glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &tailleErreur);
 
-	std::string erreur;			
+	std::string erreur;
 	erreur.resize(tailleErreur+1);
 
 
@@ -60,14 +97,14 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 
         ///THROW EXCEPTION
 	}
-	return shader;	
-	
+	return shader;
+
 }
 
 void Shader::charger()
 {
-	GLuint vertex = compileShader(GL_VERTEX_SHADER, vertexSource);	
-	GLuint fragment = compileShader(GL_FRAGMENT_SHADER, fragmentSource);	
+	GLuint vertex = compileShader(GL_VERTEX_SHADER, vertexSource);
+	GLuint fragment = compileShader(GL_FRAGMENT_SHADER, fragmentSource);
 
 	ID = glCreateProgram();
 
@@ -77,5 +114,5 @@ void Shader::charger()
 	glLinkProgram(ID);
 
 	glDeleteShader(vertex);
-	glDeleteShader(fragment);	
+	glDeleteShader(fragment);
 }
