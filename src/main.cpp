@@ -32,7 +32,7 @@ int main()
 	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
 
-	Shader shader("Shaders/color2D.vert", "Shaders/color2D.frag");
+	GL::Shader shader("Shaders/color2D.vert", "Shaders/color2D.frag");
 	try
 	{
 		shader.charger();
@@ -56,7 +56,7 @@ int main()
 	while (window.isOpen())
 	{
 		sf::Event event;
-        	while (window.pollEvent(event))
+					while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed)
 			window.close();
