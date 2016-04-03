@@ -1,4 +1,4 @@
-OBJ = main.o Shader.o
+OBJ = main.o Shader.o MyException.o
 LIB = -lsfml-graphics -lsfml-window -lsfml-system -pthread -lGL -lGLEW
 CFLAGS = -Wall -Wextra -Werror -O2 -std=c++14
 CC = g++
@@ -10,6 +10,8 @@ $(TARGET): $(OBJ)
 main.o: src/main.cpp
 	$(CC) $(CFLAGS) -c $<
 Shader.o: src/Shader.cpp
+	$(CC) $(CFLAGS) -c $<
+MyException.o: src/MyException.cpp
 	$(CC) $(CFLAGS) -c $<
 
 clean:

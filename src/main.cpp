@@ -39,9 +39,9 @@ int main()
 				case sf::Event::Closed:
 				window.close();
 				break;
-			
+
 				case sf::Event::KeyPressed:
-				
+
 				break;
 
 				case sf::Event::Resized:
@@ -53,8 +53,8 @@ int main()
 		}
 
 	glClearColor(0, 0.5, 1, 1);
-	glClear(GL_COLOR_BUFFER_BIT);	
-	
+	glClear(GL_COLOR_BUFFER_BIT);
+
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, triangle);
 	glEnableVertexAttribArray(0);
 

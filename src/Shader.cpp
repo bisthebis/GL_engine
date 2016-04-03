@@ -1,7 +1,9 @@
 #include "../include/Shader.h"
+#include "../include/MyException.h"
 
 #include <iostream>
 #include <fstream>
+
 
 
 Shader::Shader(const std::string& vert, const std::string& frag) : vertexSource(vert), fragmentSource(frag)
@@ -44,21 +46,19 @@ Shader::~Shader()
 {
 	if(glIsProgram(ID))
 	glDeleteProgram(ID);
-
-
 }
 
 GLuint Shader::compileShader(GLenum type, const std::string& file)
 {
 	GLuint shader = glCreateShader(type);
 	if(!shader)
-		std::cerr << "Type de shader incompatible ! " << std::endl;
+		throw MyException("Bad shader Type !");
 
 	std::ifstream fichier;
 	fichier.open(file);
 
 	if(!fichier)
-		std::cerr << "Fichier introuvable ! " << file << std::endl;
+		throw MyException(file + " couldn't be opened.");
 
 	std::string ligne;
 	std::string Source;
