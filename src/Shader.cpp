@@ -58,7 +58,10 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 	fichier.open(file);
 
 	if(!fichier)
+	{
+		glDeleteShader(shader);
 		throw MyException(file + " couldn't be opened.");
+	}
 
 	std::string ligne;
 	std::string Source;
@@ -87,12 +90,9 @@ GLuint Shader::compileShader(GLenum type, const std::string& file)
 	std::string erreur;
 	erreur.resize(tailleErreur+1);
 
-
-
 	glGetShaderInfoLog(shader, tailleErreur, &tailleErreur, &erreur[0]);
         erreur[tailleErreur] = '\0';
 
-	std::cerr << erreur << std::endl;
 	glDeleteShader(shader);
 
         throw MyException(file + " couldn't be compiled. Error : " + erreur);
@@ -112,6 +112,22 @@ void Shader::charger()
 	glAttachShader(ID, fragment);
 
 	glLinkProgram(ID);
+
+	GLint LinkStatus = 0;
+	glGetProgramiv(ID, GL_LINK_STATUS, &LinkStatus);
+
+	if(!LinkStatus) //Error ! Throw an exception
+	{
+		glDeleteShader(vertex);
+		glDeleteShader(fragment); //avoid leaks
+
+		glGetProgramiv(ID, GL_INFO_LOG_LENGTH, &LinkStatus);
+		std::string Log;
+		Log.resize(LinkStatus+1);
+
+		glGetProgramInfoLog(ID, LinkStatus, &LinkStatus, &Log[0]);
+		throw MyException(std::string("Link error. Shader input : ") + vertexSource + " Frag input : " + fragmentSource + ". Eror log : " + Log);
+	}
 
 	glDeleteShader(vertex);
 	glDeleteShader(fragment);

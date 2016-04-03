@@ -6,6 +6,7 @@
 #include <SFML/Window.hpp>
 
 #include "../include/Shader.h"
+#include "../include/MyException.h"
 
 int main()
 {
@@ -21,7 +22,15 @@ int main()
 	glewInit();
 
 	Shader shader("Shaders/base.vert", "Shaders/base.frag");
-	shader.charger();
+	try
+	{
+		shader.charger();
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Can't  load shader !"  << e.what() << std::endl;
+
+	}
 	glUseProgram(shader.getProgramID());
 
 	GLfloat triangle[] = {0, 0, 0.5, -0.5, -0.5, -0.5};
