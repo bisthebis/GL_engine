@@ -8,6 +8,10 @@
 #include "../include/Shader.h"
 #include "../include/MyException.h"
 
+#include "../include/easylogging++.h"
+
+INITIALIZE_EASYLOGGINGPP
+
 int main()
 {
 	sf::ContextSettings settings;
@@ -21,19 +25,22 @@ int main()
 	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
 
-	Shader shader("Shaders/base.vert", "Shaders/base.frag");
+	Shader shader("Shaders/color2D.vert", "Shaders/color2D.frag");
 	try
 	{
 		shader.charger();
 	}
 	catch (const std::exception& e)
 	{
-		std::cerr << "Can't  load shader !"  << e.what() << std::endl;
+		LOG(INFO) << "Erreur de chargement du shader";
 
 	}
 	glUseProgram(shader.getProgramID());
 
 	GLfloat triangle[] = {0, 0, 0.5, -0.5, -0.5, -0.5};
+	GLfloat color[] = {1,0,0,
+										0,1,0,
+										0,0,1};
 
 	while (window.isOpen())
 	{
@@ -67,8 +74,12 @@ int main()
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, triangle);
 	glEnableVertexAttribArray(0);
 
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, color);
+	glEnableVertexAttribArray(1);
+
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
+	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
 
 	window.display();
