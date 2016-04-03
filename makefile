@@ -7,7 +7,7 @@ TARGET = Programme
 $(TARGET): $(OBJ)
 	$(CC) -o $(TARGET) $(OBJ) $(LIB) $(CFLAGS)
 
-main.o: src/main.cpp : include/Shader.h include/MyException.h
+main.o: src/main.cpp include/Shader.h include/MyException.h
 	$(CC) $(CFLAGS) -c $<
 Shader.o: src/Shader.cpp include/Shader.h include/MyException.h
 	$(CC) $(CFLAGS) -c $<
