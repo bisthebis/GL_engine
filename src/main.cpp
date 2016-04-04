@@ -50,24 +50,29 @@ int main()
 	glBindTexture(GL_TEXTURE_2D, text.TextureID);
 
 
+	GLuint VBO;
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	
 
-	GLfloat triangle[] = {-1, 1,  1,1, -1,-1,  1, -1};
-	GLfloat UVs[] = {0,1,  1,1, 0,0, 1,0};
+	GLfloat vertices[] = {-1,1,0,1,  1,1,1,1,  -1,-1,0,0, 1,-1,1,0};
+	glBufferData(GL_ARRAY_BUFFER, 16*sizeof(GLfloat), vertices, GL_STATIC_DRAW);
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	float ratio = 1.0f;
-	while (window.isOpen())
+	bool run = true;
+	while (run)
 	{
 		sf::Event event;
 					while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed || event.type == sf::Event::KeyPressed)
-			window.close();
+			run = false;
 
 			switch (event.type)
 			{
 				case sf::Event::Closed:
-				window.close();
+				run = false;
 				break;
 
 				case sf::Event::KeyPressed:
@@ -91,10 +96,10 @@ int main()
 	glClearColor(0, 0.5, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, triangle);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, UVs);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), (char*)nullptr + 8 );
 	glEnableVertexAttribArray(1);
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
@@ -106,5 +111,7 @@ int main()
 	window.display();
 	}
 
+	glDeleteBuffers(1, &VBO);
+	
 	return 0;
 }
