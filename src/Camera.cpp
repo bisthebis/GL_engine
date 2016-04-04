@@ -3,7 +3,8 @@
 Camera::Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical) :  m_theta(-135), m_phi(-35.26), m_orientation(), m_axeVertical(axeVertical),
                                                                                   m_deplacementLateral(), m_position(position), m_pointCible(pointCible)
 {
-
+//fix ?
+orienter (0, 0);
 }
 Camera::~Camera()
 {
