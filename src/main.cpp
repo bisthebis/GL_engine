@@ -55,8 +55,8 @@ int main()
 	GLfloat UVs[] = {0,1,  1,1, 0,0, 1,0};
 
 	//glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 10.0f);
-	glm::mat4 projection(1.0f);
-
+	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
+	float ratio = 1.0f;
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -77,9 +77,11 @@ int main()
 
 				case sf::Event::Resized:
 				glViewport(0, 0, event.size.width, event.size.height);
-				//projection = glm::ortho(float(event.size.width)/-100, float(event.size.width)/100, float(event.size.height)/-100, float(event.size.height)/100, 0.1f, 100.0f);
-				projection = glm::ortho(-2.0f,2.0f,-2.0f,2.0f,0.1f,10.0f);
-
+				ratio = float(event.size.width) / float(event.size.height);
+				if(ratio >= 1)
+				projection = glm::ortho(-2.0f*ratio,2.0f*ratio,-2.0f,2.0f,-2.0f,10.0f);
+				else
+				projection = glm::ortho(-2.0f, 2.0f,-2.0f/ratio,2.0f/ratio,-2.0f,10.0f);
 				break;
 
 				default:
