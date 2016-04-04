@@ -1,4 +1,4 @@
-OBJ = main.o Shader.o MyException.o Texture.o
+OBJ = main.o Shader.o MyException.o Texture.o Camera.o
 LIB = -lsfml-graphics -lsfml-window -lsfml-system -pthread -lGL -lGLEW
 CFLAGS = -Wall -Wextra -Werror -O2 -std=c++14
 CC = g++
@@ -15,6 +15,9 @@ MyException.o: src/MyException.cpp include/MyException.h
 	$(CC) $(CFLAGS) -c $<
 Texture.o: src/Texture.cpp include/MyException.h include/Texture.h
 	$(CC) $(CFLAGS) -c $<
+Camera.o: src/Camera.cpp include/Camera.h
+	$(CC) $(CFLAGS) -c $<
+	
 
 
 clean:

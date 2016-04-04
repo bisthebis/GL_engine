@@ -1,10 +1,6 @@
-#include "Camera.h"
+#include "../include/Camera.h"
 
-Camera::Camera() : m_phi(0.0), m_theta(0.0), m_orientation(), m_axeVertical(0, 0, 1), m_deplacementLateral(), m_position(), m_pointCible()
-{
-
-}
-Camera::Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical) : m_phi(-35.26), m_theta(-135), m_orientation(), m_axeVertical(axeVertical),
+Camera::Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical) :  m_theta(-135), m_phi(-35.26), m_orientation(), m_axeVertical(axeVertical),
                                                                                   m_deplacementLateral(), m_position(position), m_pointCible(pointCible)
 {
 
@@ -16,7 +12,7 @@ Camera::~Camera()
 
 void Camera::orienter(float xRel, float yRel)
 {
-    // Récupération des angles
+    // Rï¿½cupï¿½ration des angles
 
     m_phi += -yRel * 0.5;
     m_theta += -xRel * 0.5;
@@ -44,7 +40,7 @@ void Camera::orienter(float xRel, float yRel)
         float thetaRadian = m_theta * M_PI / 180;
 
 
-        // Calcul des coordonnées sphériques
+        // Calcul des coordonnï¿½es sphï¿½riques
 
         m_orientation.x = cos(phiRadian) * sin(thetaRadian);
         m_orientation.y = sin(phiRadian);
@@ -54,7 +50,7 @@ void Camera::orienter(float xRel, float yRel)
 
         if(m_axeVertical.x == 1.0)
         {
-            // Calcul des coordonnées sphériques
+            // Calcul des coordonnï¿½es sphï¿½riques
 
             m_orientation.x = sin(phiRadian);
             m_orientation.y = cos(phiRadian) * cos(thetaRadian);
@@ -66,7 +62,7 @@ void Camera::orienter(float xRel, float yRel)
 
         else if(m_axeVertical.y == 1.0)
         {
-            // Calcul des coordonnées sphériques
+            // Calcul des coordonnï¿½es sphï¿½riques
 
             m_orientation.x = cos(phiRadian) * sin(thetaRadian);
             m_orientation.y = sin(phiRadian);
@@ -78,7 +74,7 @@ void Camera::orienter(float xRel, float yRel)
 
         else
         {
-            // Calcul des coordonnées sphériques
+            // Calcul des coordonnï¿½es sphï¿½riques
 
             m_orientation.x = cos(phiRadian) * cos(thetaRadian);
             m_orientation.y = cos(phiRadian) * sin(thetaRadian);
@@ -89,7 +85,7 @@ void Camera::orienter(float xRel, float yRel)
         // Calcul de la normale
 
         m_deplacementLateral = glm::normalize(glm::cross(m_axeVertical, m_orientation));
-        m_pointCible = m_position + m_orientation; ///Regarder vers le point 1 unité + loin que la position
+        m_pointCible = m_position + m_orientation; ///Regarder vers le point 1 unitï¿½ + loin que la position
 
 }
 
@@ -101,50 +97,50 @@ void Camera::lookAt(glm::mat4 &modelview)
     modelview = glm::lookAt(m_position, m_pointCible, m_axeVertical);
 }
 
-void Camera::deplacer(char DIR)
+void Camera::deplacer(CameraDirection direction)
 {
 
-    if(DIR == UP)
+    if(direction == CameraDirection::UP)
     {
         m_position = m_position + m_orientation * 0.5f;
         m_pointCible = m_position + m_orientation;
     }
 
 
-    // Recul de la caméra
+    // Recul de la camï¿½ra
 
-    if(DIR == DOWN)
+    if(direction == CameraDirection::DOWN)
     {
         m_position = m_position - m_orientation * 0.5f;
         m_pointCible = m_position + m_orientation;
     }
 
 
-    // Déplacement vers la gauche
+    // Dï¿½placement vers la gauche
 
-    if(DIR == LEFT)
+    if(direction == CameraDirection::LEFT)
     {
         m_position = m_position + m_deplacementLateral * 0.5f;
         m_pointCible = m_position + m_orientation;
     }
 
 
-    // Déplacement vers la droite
+    // Dï¿½placement vers la droite
 
-    if(DIR == RIGHT)
+    if(direction == CameraDirection::RIGHT)
     {
         m_position = m_position - m_deplacementLateral * 0.5f;
         m_pointCible = m_position + m_orientation;
     }
 
-    if(DIR == TOP)
+    if(direction == CameraDirection::TOP)
     {
         m_position = m_position + m_axeVertical * 0.5f;
         m_pointCible = m_position + m_orientation;
 
     }
 
-    if(DIR == BOTTOM)
+    if(direction == CameraDirection::BOTTOM)
     {
         m_position = m_position - m_axeVertical * 0.5f;
         m_pointCible = m_position + m_orientation;
