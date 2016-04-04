@@ -54,7 +54,6 @@ int main()
 	GLfloat triangle[] = {-1, 1,  1,1, -1,-1,  1, -1};
 	GLfloat UVs[] = {0,1,  1,1, 0,0, 1,0};
 
-	//glm::mat4 projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 10.0f);
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	float ratio = 1.0f;
 	while (window.isOpen())
@@ -79,9 +78,9 @@ int main()
 				glViewport(0, 0, event.size.width, event.size.height);
 				ratio = float(event.size.width) / float(event.size.height);
 				if(ratio >= 1)
-				projection = glm::ortho(-2.0f*ratio,2.0f*ratio,-2.0f,2.0f,-2.0f,10.0f);
+				projection = glm::ortho(-2.0f * ratio, 2.0f * ratio, -2.0f, 2.0f, -2.0f, 10.0f);
 				else
-				projection = glm::ortho(-2.0f, 2.0f,-2.0f/ratio,2.0f/ratio,-2.0f,10.0f);
+				projection = glm::ortho(-2.0f, 2.0f, -2.0f / ratio, 2.0f / ratio, -2.0f, 10.0f);
 				break;
 
 				default:
