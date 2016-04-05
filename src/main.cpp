@@ -20,6 +20,20 @@
 
 INITIALIZE_EASYLOGGINGPP
 
+inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false)
+{
+		if(!orthographic)
+			target = glm::perspective(60.0f, width/height, -1.0f, 10.0f);
+		else
+			{
+				float ratio = width / height;
+				if(ratio >= 1)
+				target = glm::ortho(-2.0f * ratio, 2.0f * ratio, -2.0f, 2.0f, -2.0f, 10.0f);
+				else
+				target = glm::ortho(-2.0f, 2.0f, -2.0f / ratio, 2.0f / ratio, -2.0f, 10.0f);
+			}
+}
+
 int main()
 {
 	sf::ContextSettings settings;
@@ -33,7 +47,7 @@ int main()
 	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
 
-	GL::Shader shader("Shaders/Texture2D.vert", "Shaders/Texture2D.frag");
+	GL::Shader shader("Shaders/Color3D.vert", "Shaders/Color3D.frag");
 	try
 	{
 		shader.charger();
@@ -56,16 +70,22 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 
-	GLfloat vertices[] = {-1,1,0,1,  1,1,1,1,  -1,-1,0,0, 1,-1,1,0};
-	glBufferData(GL_ARRAY_BUFFER, 16*sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+	GLfloat vertices[] = {-1,1,0, 0,1,1,  1,1,0, 1,1,0  -1,-1,0, 0,0, 1,-1,0, 1,0,1};
+	/*GLfloat vertices[] ={1,1,1,  1,1,1
+		1,1,0,  1,0,1,
+		1,0,1,  1,1,0
+
+	};*/
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
 
 	Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
 	camera.lookAt(view);
-	float ratio = 1.0f;
+
 	bool run = true;
+	bool orthographic = true;
 	while (run)
 	{
 		sf::Event event;
@@ -100,6 +120,10 @@ int main()
 							break;
 						case sf::Keyboard::Key::X:
 							camera.deplacer(CameraDirection::TOP);
+							break;
+
+						case sf::Keyboard::Key::P:
+							orthographic = !orthographic;
 
 						default:
 							break;
@@ -109,12 +133,7 @@ int main()
 
 				case sf::Event::Resized:
 				glViewport(0, 0, event.size.width, event.size.height);
-				ratio = float(event.size.width) / float(event.size.height);
-				if(ratio >= 1)
-				projection = glm::ortho(-2.0f * ratio, 2.0f * ratio, -2.0f, 2.0f, -2.0f, 10.0f);
-				else
-				projection = glm::ortho(-2.0f, 2.0f, -2.0f / ratio, 2.0f / ratio, -2.0f, 10.0f);
-				break;
+
 
 				default:
 				break;
@@ -124,17 +143,18 @@ int main()
 	glClearColor(0, 0.5, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), 0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), (char*)nullptr + 8 );
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (char*)nullptr + 12 );
 	glEnableVertexAttribArray(1);
 
+	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 	camera.lookAt(view);
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
