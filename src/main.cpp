@@ -3,6 +3,7 @@
 #include <GL/gl.h>
 
 #include <iostream>
+#include <vector>
 #include <cmath>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
@@ -23,14 +24,14 @@ INITIALIZE_EASYLOGGINGPP
 inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false)
 {
 		if(!orthographic)
-			target = glm::perspective(60.0f, width/height, -1.0f, 10.0f);
+			target = glm::perspective(60.0f, width/height, -1.0f, 100.0f);
 		else
 			{
 				float ratio = width / height;
 				if(ratio >= 1)
-				target = glm::ortho(-2.0f * ratio, 2.0f * ratio, -2.0f, 2.0f, -2.0f, 10.0f);
+				target = glm::ortho(-2.0f * ratio, 2.0f * ratio, -2.0f, 2.0f, -2.0f, 100.0f);
 				else
-				target = glm::ortho(-2.0f, 2.0f, -2.0f / ratio, 2.0f / ratio, -2.0f, 10.0f);
+				target = glm::ortho(-2.0f, 2.0f, -2.0f / ratio, 2.0f / ratio, -2.0f, 100.0f);
 			}
 }
 
@@ -46,6 +47,8 @@ int main()
 
 	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
+	glEnable(GL_DEPTH_TEST);
+
 
 	GL::Shader shader("Shaders/Color3D.vert", "Shaders/Color3D.frag");
 	try
@@ -70,13 +73,58 @@ int main()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
 
-	GLfloat vertices[] = {-1,1,0, 0,1,1,  1,1,0, 1,1,0  -1,-1,0, 0,0, 1,-1,0, 1,0,1};
+	//GLfloat vertices[] = {-1,1,0, 0,1,1,  1,1,0, 1,1,0  -1,-1,0, 0,0, 1,-1,0, 1,0,1};
 	/*GLfloat vertices[] ={1,1,1,  1,1,1
 		1,1,0,  1,0,1,
 		1,0,1,  1,1,0
 
 	};*/
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	std::vector<GLfloat> vertices(0);
+
+	{
+		float vertice[] = {-1.0, -1.0, -1.0,   1.0, -1.0, -1.0,   1.0, 1.0, -1.0,     // Face 1
+
+                    -1.0, -1.0, -1.0,   -1.0, 1.0, -1.0,   1.0, 1.0, -1.0,     // Face 1
+
+
+                    1.0, -1.0, 1.0,   1.0, -1.0, -1.0,   1.0, 1.0, -1.0,       // Face 2
+
+                    1.0, -1.0, 1.0,   1.0, 1.0, 1.0,   1.0, 1.0, -1.0,         // Face 2
+
+
+                    -1.0, -1.0, 1.0,   1.0, -1.0, 1.0,   1.0, -1.0, -1.0,      // Face 3
+
+                    -1.0, -1.0, 1.0,   -1.0, -1.0, -1.0,   1.0, -1.0, -1.0};   // Face 3
+
+
+										float couleurs[] = {1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,           // Face 1
+								                    1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,           // Face 1
+
+								                    0.0, 1.0, 0.0,   0.0, 1.0, 0.0,   0.0, 1.0, 0.0,           // Face 2
+								                    0.0, 1.0, 0.0,   0.0, 1.0, 0.0,   0.0, 1.0, 0.0,           // Face 2
+
+								                    0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,           // Face 3
+								                    0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0};          // Face 3
+			float* vertptr = vertice;
+			float* colptr = couleurs;
+			for (int i = 0; i < 108; i += 6)
+			{
+
+
+					vertices.push_back(*vertptr++);
+					vertices.push_back(*vertptr++);
+					vertices.push_back(*vertptr++);
+					vertices.push_back(*colptr++);
+					vertices.push_back(*colptr++);
+					vertices.push_back(*colptr++);
+
+			}
+
+			for (auto e : vertices)
+			std::cout << e << ' ';
+
+	}
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
@@ -85,7 +133,7 @@ int main()
 	camera.lookAt(view);
 
 	bool run = true;
-	bool orthographic = true;
+	bool orthographic = false;
 	while (run)
 	{
 		sf::Event event;
@@ -141,7 +189,7 @@ int main()
 		}
 
 	glClearColor(0, 0.5, 1, 1);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), 0);
 	glEnableVertexAttribArray(0);
@@ -151,10 +199,11 @@ int main()
 
 	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 	camera.lookAt(view);
+	//view = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawArrays(GL_TRIANGLES, 0, 18);
 
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
