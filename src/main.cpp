@@ -21,17 +21,17 @@
 
 INITIALIZE_EASYLOGGINGPP
 
-inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false)
+inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false, const float zFar = 50.0f)
 {
 		if(!orthographic)
-			target = glm::perspective(45.0f, width/height, 0.1f, 100.0f);
+			target = glm::perspective(45.0f, width/height, 0.1f, zFar);
 		else
 			{
 				float ratio = width / height;
 				if(ratio >= 1)
-				target = glm::ortho(-2.0f * ratio, 2.0f * ratio, -2.0f, 2.0f, -2.0f, 100.0f);
+				target = glm::ortho(-2.0f * ratio, 2.0f * ratio, -2.0f, 2.0f, -2.0f, zFar);
 				else
-				target = glm::ortho(-2.0f, 2.0f, -2.0f / ratio, 2.0f / ratio, -2.0f, 100.0f);
+				target = glm::ortho(-2.0f, 2.0f, -2.0f / ratio, 2.0f / ratio, -2.0f, zFar);
 			}
 }
 
@@ -122,6 +122,13 @@ int main()
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
+	glm::mat4 models[5];
+	for (int i = 0; i < 5; ++i)
+	{
+		models[i] = glm::mat4(1.0f);
+		models[i] = glm::translate(models[i], glm::vec3(1.5f * i - 3.0f, 0.5f*i, 0));
+		models[i] = glm::rotate(models[i], i * 30.0f - 60.0f, glm::vec3(0.5f, 0.5f, 0.5f));
+	}
 
 	GL::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
 	camera.lookAt(view);
@@ -166,6 +173,7 @@ int main()
 
 						case sf::Keyboard::Key::P:
 							orthographic = !orthographic;
+							getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 
 						default:
 							break;
@@ -175,6 +183,7 @@ int main()
 
 				case sf::Event::Resized:
 				glViewport(0, 0, event.size.width, event.size.height);
+				getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 
 
 				default:
@@ -191,12 +200,12 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (char*)nullptr + 12 );
 	glEnableVertexAttribArray(1);
 
-	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
+	//getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 	camera.lookAt(view);
 
 	///TMP
 	//projection = glm::perspective(45.0f, (GLfloat)window.getSize().x / (GLfloat)window.getSize().y, 0.1f, 100.0f);
-	view = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+	//view = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
 	//view = glm::mat4(1.0f);
 	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 
@@ -204,7 +213,13 @@ int main()
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
 	glBindTexture(GL_TEXTURE_2D, text.getProgramID());
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+
+	for (int i = 0; i < 5; ++i)
+	{
+			glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(models[i]));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+	}
+
 
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
