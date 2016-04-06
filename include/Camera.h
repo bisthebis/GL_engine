@@ -17,32 +17,34 @@
 
 enum class CameraDirection : char {UP, DOWN, LEFT, RIGHT, TOP, BOTTOM};
 
-
-class Camera
+namespace GL
 {
-    public:
-        Camera() = delete;
-        Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical);
-        virtual ~Camera();
 
-        void orienter(float xRel, float yRel);
-        void lookAt(glm::mat4 &modelview);
+	class Camera
+	{
+		public:
+			Camera() = delete;
+			Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical);
+			virtual ~Camera();
 
-        void deplacer(CameraDirection direction);
+			void orienter(float xRel, float yRel);
+			void lookAt(glm::mat4 &modelview);
 
-    protected:
-    private:
+			void deplacer(CameraDirection direction);
 
-        float m_theta, m_phi; //H et V
-        glm::vec3 m_orientation;
+		protected:
+		private:
 
-        // Attributs de déplacement
+			float m_theta, m_phi; //H et V
+			glm::vec3 m_orientation;
 
-        glm::vec3 m_axeVertical;
-        glm::vec3 m_deplacementLateral; //Normale du plan
+			// Attributs de déplacement
 
-        glm::vec3 m_position;
-        glm::vec3 m_pointCible;
-};
+			glm::vec3 m_axeVertical;
+			glm::vec3 m_deplacementLateral; //Normale du plan
 
+			glm::vec3 m_position;
+			glm::vec3 m_pointCible;
+	};
+}
 #endif // CAMERA_H
