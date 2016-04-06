@@ -118,7 +118,7 @@ int main()
     };
 
 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
@@ -164,11 +164,17 @@ int main()
 						case sf::Keyboard::Key::D:
 							camera.deplacer(CameraDirection::RIGHT);
 							break;
+						case sf::Keyboard::Key::A:
+							camera.orienter(-5.0f, 0.0f);
+							break;
+						case sf::Keyboard::Key::E:
+							camera.orienter(5.0f, 0.0f);
+							break;
 						case sf::Keyboard::Key::C:
-							camera.deplacer(CameraDirection::BOTTOM);
+							camera.orienter(0.0f, -5.0f);
 							break;
 						case sf::Keyboard::Key::X:
-							camera.deplacer(CameraDirection::TOP);
+							camera.orienter(0.0f, 5.0f);
 							break;
 
 						case sf::Keyboard::Key::P:
@@ -200,15 +206,7 @@ int main()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (char*)nullptr + 12 );
 	glEnableVertexAttribArray(1);
 
-	//getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 	camera.lookAt(view);
-
-	///TMP
-	//projection = glm::perspective(45.0f, (GLfloat)window.getSize().x / (GLfloat)window.getSize().y, 0.1f, 100.0f);
-	//view = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
-	//view = glm::mat4(1.0f);
-	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
