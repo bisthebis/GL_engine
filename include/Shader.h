@@ -20,9 +20,9 @@ namespace GL
 			GLuint compileShader(GLenum type, const std::string& file); //Gère la compilation d'un shader et lance les exceptions adéquates en cas d'erreur. Retourne ledit shader
 		public:
 			Shader(const std::string& vert, const std::string& frag);
-			Shader(const Shader& src);
+			Shader(const Shader& src) = delete;
 			Shader(Shader&& src);
-			Shader& operator= (const Shader& src);
+			Shader& operator= (const Shader& src) = delete;
 			Shader& operator= (Shader&& src);
 			~Shader();
 

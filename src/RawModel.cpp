@@ -5,23 +5,33 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+#include "../include/easylogging++.h"
+
 
 namespace GL
 {
 
-  RawModel::RawModel() : VBOs(0) {}
+  RawModel::RawModel() : VBOs(0) {LOG(INFO) << "Creating a RawModel";}
   RawModel::~RawModel() {this->cleanup();}
   void RawModel::cleanup()
   {
     if(glIsVertexArray(VAO))
-    glDeleteVertexArrays(1, &VAO);
+    {
+      LOG(INFO) << "Deleting a VAO : " << VAO;
+      glDeleteVertexArrays(1, &VAO);
+    }
+
 
     VAO = 0;
 
     for (GLuint& VBO : VBOs)
     {
       if(glIsBuffer(VBO))
-      glDeleteBuffers(1, &VBO);
+      {
+        LOG(INFO) << "Deleting a VBO : " << VBO;
+        glDeleteBuffers(1, &VBO);
+      }
+
 
       VBO = 0;
     }

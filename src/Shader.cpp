@@ -1,5 +1,6 @@
 #include "../include/Shader.h"
 #include "../include/MyException.h"
+#include "../include/easylogging++.h"
 
 #include <iostream>
 #include <fstream>
@@ -10,12 +11,7 @@ namespace GL
 {
 	Shader::Shader(const std::string& vert, const std::string& frag) : vertexSource(vert), fragmentSource(frag)
 	{
-
-	}
-
-	Shader::Shader(const Shader& src)	: vertexSource(src.vertexSource), fragmentSource(src.fragmentSource)
-	{
-		charger();
+			LOG(INFO) << "Creating a shader. vertexSource : " << vertexSource << " and fragmentSource : " << fragmentSource;
 	}
 
 	Shader::Shader(Shader&& src)
@@ -23,15 +19,8 @@ namespace GL
 		std::swap(vertexSource, src.vertexSource);
 		std::swap(fragmentSource, src.fragmentSource);
 		ID = src.ID;
+		LOG(INFO) << "Move constructing a shader. vertexSource : " << vertexSource << " and fragmentSource : " << fragmentSource << ". ID : " << ID;
 		src.ID = 0; /*afin d'éviter que le programme ne soit détruit */
-	}
-
-	Shader& Shader::operator= (const Shader& src)
-	{
-		vertexSource = src.vertexSource;
-		fragmentSource = src.fragmentSource;
-		charger();
-		return *this;
 	}
 
 	Shader& Shader::operator= (Shader&& src)
@@ -41,13 +30,19 @@ namespace GL
 		ID = src.ID;
 		src.ID = 0;
 
+		LOG(INFO) << "Move assigning a shader. vertexSource : " << vertexSource << " and fragmentSource : " << fragmentSource << ". ID : " << ID;
+
+
 		return *this; /*afin d'éviter que le programme ne soit détruit */
 	}
 
 	Shader::~Shader()
 	{
 		if(glIsProgram(ID))
-		glDeleteProgram(ID);
+		{
+			glDeleteProgram(ID);
+			LOG(INFO) << "Deleting Shader";
+		}
 	}
 
 	GLuint Shader::compileShader(GLenum type, const std::string& file)

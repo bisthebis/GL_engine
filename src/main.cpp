@@ -60,16 +60,7 @@ int main()
 
 
 	GL::Shader shader("Shaders/Texture3D.vert", "Shaders/Texture2D.frag");
-	try
-	{
-		shader.charger();
-		LOG(INFO) << "shader chargé avec succès.";
-	}
-	catch (const std::exception& e)
-	{
-		LOG(INFO) << "Erreur de chargement du shader : " << e.what();
-
-	}
+	shader.charger();
 	glUseProgram(shader.getProgramID());
 
 	GL::Texture text, text2;
@@ -91,6 +82,7 @@ int main()
 
 	bool run = true;
 	bool orthographic = false;
+	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 	while (run)
 	{
 		sf::Event event;

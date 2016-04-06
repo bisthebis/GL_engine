@@ -1,4 +1,6 @@
 #include "../include/Texture.h"
+#include "../include/easylogging++.h"
+
 #include <string>
 #include <SFML/Graphics.hpp>
 
@@ -12,11 +14,16 @@ namespace GL
 	Texture::~Texture()
 	{
 		if(glIsTexture(TextureID))
-		glDeleteTextures(1, &TextureID);
+		{
+			glDeleteTextures(1, &TextureID);
+			LOG(INFO) << "Deleting Texture";
+		}
+
 	}
 
 	void Texture::loadFromFile(const std::string& src)
 	{
+
 			sf::Image img;
 			img.loadFromFile(src);
 			img.flipVertically();
@@ -37,6 +44,8 @@ namespace GL
 			unsigned int height = img.getSize().y;
 
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
+
+			LOG(INFO) << "Successfully loaded texture from : " << src;
 
 	}
 
