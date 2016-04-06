@@ -6,14 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <cmath>
-/*
-#define UP 1
-#define DOWN 2
-#define LEFT 3
-#define RIGHT 4
-#define TOP 5
-#define BOTTOM 6
-*/
+
 
 enum class CameraDirection : char {UP, DOWN, LEFT, RIGHT, TOP, BOTTOM};
 
