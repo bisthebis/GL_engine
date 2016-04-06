@@ -51,7 +51,7 @@ int main()
 
 
 
-	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
+	sf::Window window(sf::VideoMode(500, 500), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 
@@ -72,9 +72,9 @@ int main()
 	}
 	glUseProgram(shader.getProgramID());
 
-	GL::Texture text;
+	GL::Texture text, text2;
 	text.loadFromFile("container.png");
-
+	text2.loadFromFile("cat.png");
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
@@ -162,7 +162,15 @@ int main()
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
+
+	glActiveTexture(GL_TEXTURE0);
+	glUniform1i(glGetUniformLocation(shader.getProgramID(), "myTexture"), 0);
 	glBindTexture(GL_TEXTURE_2D, text.getProgramID());
+	glActiveTexture(GL_TEXTURE1);
+	glUniform1i(glGetUniformLocation(shader.getProgramID(), "myTexture2"), 1);
+	glBindTexture(GL_TEXTURE_2D, text2.getProgramID());
+
+	glUniform1f(3, 0.5f + 0.5f*sin(time.getElapsedTime().asSeconds()));
 
 	for (int i = 0; i < 5; ++i)
 	{
