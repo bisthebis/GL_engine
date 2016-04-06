@@ -4,15 +4,13 @@ project (Experiments)
 set(CMAKE_CXX_STANDARD 14)
 
 
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH}) #SFML Package doesn't tell CMAKE how to find the lib, so FindSFML.cmake is required
+
+
 find_package(SFML 2 REQUIRED system window graphics)
-include_directories(${SFML_INCLUDE_DIR})
-
-
-
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS})
+include_directories(${SFML_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS})
 
 
 

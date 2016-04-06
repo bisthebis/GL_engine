@@ -83,7 +83,7 @@ int main()
 	{
 		models[i] = glm::mat4(1.0f);
 		models[i] = glm::translate(models[i], glm::vec3(1.5f * i - 3.0f, 0.5f*i, 0));
-		models[i] = glm::rotate(models[i], i * 30.0f - 60.0f, glm::vec3(0.5f, 0.5f, 0.5f));
+		models[i] = glm::rotate(models[i], i * 20.0f - 40.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	}
 
 	GL::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
