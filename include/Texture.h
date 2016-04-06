@@ -9,12 +9,13 @@ namespace GL
   class Texture
   {
     using GLuint = unsigned int;
-    public:
+    private:
        GLuint TextureID = 0;
     public:
       Texture(){}
       ~Texture();
       void loadFromFile(const std::string& src);
+      GLuint getProgramID();
 
   };
 

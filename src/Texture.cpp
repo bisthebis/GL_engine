@@ -40,4 +40,6 @@ namespace GL
 
 	}
 
+	GLuint Texture::getProgramID(){return TextureID;}
+
 }

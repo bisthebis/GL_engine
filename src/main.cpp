@@ -24,7 +24,7 @@ INITIALIZE_EASYLOGGINGPP
 inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false)
 {
 		if(!orthographic)
-			target = glm::perspective(60.0f, width/height, -1.0f, 100.0f);
+			target = glm::perspective(45.0f, width/height, 0.1f, 100.0f);
 		else
 			{
 				float ratio = width / height;
@@ -44,13 +44,15 @@ int main()
 	settings.majorVersion = 4;
 	settings.minorVersion = 5;
 
+	sf::Clock time;
+
 
 	sf::Window window(sf::VideoMode(200, 200), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 
 
-	GL::Shader shader("Shaders/Color3D.vert", "Shaders/Color3D.frag");
+	GL::Shader shader("Shaders/Texture3D.vert", "Shaders/Texture2D.frag");
 	try
 	{
 		shader.charger();
@@ -64,67 +66,59 @@ int main()
 	glUseProgram(shader.getProgramID());
 
 	GL::Texture text;
-	text.loadFromFile("cat.png");
-	glBindTexture(GL_TEXTURE_2D, text.TextureID);
+	text.loadFromFile("container.png");
 
 
 	GLuint VBO;
 	glGenBuffers(1, &VBO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
+	GLfloat vertices[] = {
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 
-	//GLfloat vertices[] = {-1,1,0, 0,1,1,  1,1,0, 1,1,0  -1,-1,0, 0,0, 1,-1,0, 1,0,1};
-	/*GLfloat vertices[] ={1,1,1,  1,1,1
-		1,1,0,  1,0,1,
-		1,0,1,  1,1,0
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
 
-	};*/
-	std::vector<GLfloat> vertices(0);
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-	{
-		float vertice[] = {-1.0, -1.0, -1.0,   1.0, -1.0, -1.0,   1.0, 1.0, -1.0,     // Face 1
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-                    -1.0, -1.0, -1.0,   -1.0, 1.0, -1.0,   1.0, 1.0, -1.0,     // Face 1
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
-
-                    1.0, -1.0, 1.0,   1.0, -1.0, -1.0,   1.0, 1.0, -1.0,       // Face 2
-
-                    1.0, -1.0, 1.0,   1.0, 1.0, 1.0,   1.0, 1.0, -1.0,         // Face 2
-
-
-                    -1.0, -1.0, 1.0,   1.0, -1.0, 1.0,   1.0, -1.0, -1.0,      // Face 3
-
-                    -1.0, -1.0, 1.0,   -1.0, -1.0, -1.0,   1.0, -1.0, -1.0};   // Face 3
-
-
-										float couleurs[] = {1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,           // Face 1
-								                    1.0, 0.0, 0.0,   1.0, 0.0, 0.0,   1.0, 0.0, 0.0,           // Face 1
-
-								                    0.0, 1.0, 0.0,   0.0, 1.0, 0.0,   0.0, 1.0, 0.0,           // Face 2
-								                    0.0, 1.0, 0.0,   0.0, 1.0, 0.0,   0.0, 1.0, 0.0,           // Face 2
-
-								                    0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0,           // Face 3
-								                    0.0, 0.0, 1.0,   0.0, 0.0, 1.0,   0.0, 0.0, 1.0};          // Face 3
-			float* vertptr = vertice;
-			float* colptr = couleurs;
-			for (int i = 0; i < 108; i += 6)
-			{
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+    };
 
 
-					vertices.push_back(*vertptr++);
-					vertices.push_back(*vertptr++);
-					vertices.push_back(*vertptr++);
-					vertices.push_back(*colptr++);
-					vertices.push_back(*colptr++);
-					vertices.push_back(*colptr++);
-
-			}
-
-			for (auto e : vertices)
-			std::cout << e << ' ';
-
-	}
-	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*vertices.size(), &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
@@ -191,19 +185,26 @@ int main()
 	glClearColor(0, 0.5, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), 0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), 0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (char*)nullptr + 12 );
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5*sizeof(GLfloat), (char*)nullptr + 12 );
 	glEnableVertexAttribArray(1);
 
 	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 	camera.lookAt(view);
-	//view = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+
+	///TMP
+	//projection = glm::perspective(45.0f, (GLfloat)window.getSize().x / (GLfloat)window.getSize().y, 0.1f, 100.0f);
+	view = glm::lookAt(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+	//view = glm::mat4(1.0f);
+	//view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
-	glDrawArrays(GL_TRIANGLES, 0, 18);
+	glBindTexture(GL_TEXTURE_2D, text.getProgramID());
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
