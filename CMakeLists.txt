@@ -11,7 +11,7 @@ find_package(SFML 2 REQUIRED system window graphics)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 include_directories(${SFML_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS})
-
+include_directories(include)
 
 
 add_executable(

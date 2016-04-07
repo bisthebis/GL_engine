@@ -1,12 +1,12 @@
-#include "../include/Texture.h"
-#include "../include/easylogging++.h"
-
 #include <string>
 #include <SFML/Graphics.hpp>
 
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GL/gl.h>
+
+#include "Texture.h"
+#include "easylogging++.h"
 
 
 namespace GL

@@ -1,12 +1,9 @@
-#include "../include/RawModel.h"
-
-#include "../include/MyException.h"
-
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "../include/easylogging++.h"
-
+#include "easylogging++.h"
+#include "RawModel.h"
+#include "MyException.h"
 
 namespace GL
 {

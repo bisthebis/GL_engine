@@ -1,11 +1,9 @@
-#include "../include/Shader.h"
-#include "../include/MyException.h"
-#include "../include/easylogging++.h"
-
 #include <iostream>
 #include <fstream>
 
-
+#include "Shader.h"
+#include "MyException.h"
+#include "easylogging++.h"
 
 namespace GL
 {
