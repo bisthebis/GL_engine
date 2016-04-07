@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace GL
+namespace glUtils
 {
 
   class RawModel

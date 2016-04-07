@@ -8,7 +8,7 @@
 #include <string>
 #include <algorithm>
 
-namespace GL
+namespace glUtils
 {
 	class Shader
 	{

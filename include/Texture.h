@@ -4,7 +4,7 @@
 
 #include <string>
 
-namespace GL
+namespace glUtils
 {
   class Texture
   {

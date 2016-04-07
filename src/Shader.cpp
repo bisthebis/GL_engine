@@ -5,7 +5,7 @@
 #include "MyException.h"
 #include "easylogging++.h"
 
-namespace GL
+namespace glUtils
 {
 	Shader::Shader(const std::string& vert, const std::string& frag) : vertexSource(vert), fragmentSource(frag)
 	{

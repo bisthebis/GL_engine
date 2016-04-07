@@ -36,7 +36,7 @@ inline void getProjection(glm::mat4& target, float width, float height, bool ort
 			}
 }
 
-void initCube(GL::RawModel& model);
+void initCube(glUtils::RawModel& model);
 
 int main()
 {
@@ -55,15 +55,15 @@ int main()
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 
-	GL::RawModel cube;
+	glUtils::RawModel cube;
 	initCube(cube);
 
 
-	GL::Shader shader("Shaders/Texture3D.vert", "Shaders/Texture2D.frag");
+	glUtils::Shader shader("Shaders/Texture3D.vert", "Shaders/Texture2D.frag");
 	shader.charger();
 	glUseProgram(shader.getProgramID());
 
-	GL::Texture text, text2;
+	glUtils::Texture text, text2;
 	text.loadFromFile("container.png");
 	text2.loadFromFile("cat.png");
 
@@ -77,7 +77,7 @@ int main()
 		models[i] = glm::rotate(models[i], i * 20.0f - 40.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	}
 
-	GL::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+	glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
 	camera.lookAt(view);
 
 	bool run = true;
@@ -179,7 +179,7 @@ int main()
 }
 
 
-void initCube(GL::RawModel& model)
+void initCube(glUtils::RawModel& model)
 {
 	GLuint VBO, VAO;
 	glGenVertexArrays(1, &VAO);

@@ -5,7 +5,7 @@
 #include "RawModel.h"
 #include "MyException.h"
 
-namespace GL
+namespace glUtils
 {
 
   RawModel::RawModel() : VBOs(0) {LOG(INFO) << "Creating a RawModel";}

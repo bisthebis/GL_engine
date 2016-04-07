@@ -10,7 +10,7 @@
 
 enum class CameraDirection : char {UP, DOWN, LEFT, RIGHT, TOP, BOTTOM};
 
-namespace GL
+namespace glUtils
 {
 
 	class Camera

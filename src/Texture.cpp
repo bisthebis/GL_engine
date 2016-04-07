@@ -9,7 +9,7 @@
 #include "easylogging++.h"
 
 
-namespace GL
+namespace glUtils
 {
 	Texture::~Texture()
 	{
