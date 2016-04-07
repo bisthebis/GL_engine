@@ -1,9 +1,11 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "easylogging++.h"
-#include "RawModel.h"
+
+#include "glUtils/RawModel.h"
+
 #include "MyException.h"
+#include "easylogging++.h"
 
 namespace glUtils
 {

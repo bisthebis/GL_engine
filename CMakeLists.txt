@@ -23,12 +23,13 @@ add_executable(
 	src/Shader.cpp
 	src/Texture.cpp
 
-	include/Camera.h
 	include/easylogging++.h
 	include/MyException.h
-	include/RawModel.h
-	include/Shader.h
-	include/Texture.h
+	
+	include/glUtils/Camera.h
+	include/glUtils/RawModel.h
+	include/glUtils/Shader.h
+	include/glUtils/Texture.h
 
 )
 

@@ -1,4 +1,4 @@
-#include "Camera.h"
+#include "glUtils/Camera.h"
 
 namespace glUtils
 {

@@ -1,7 +1,8 @@
 #include <iostream>
 #include <fstream>
 
-#include "Shader.h"
+#include "glUtils/Shader.h"
+
 #include "MyException.h"
 #include "easylogging++.h"
 

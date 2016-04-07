@@ -12,13 +12,13 @@
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Shader.h"
-#include "MyException.h"
-#include "Texture.h"
-#include "Camera.h"
-#include "RawModel.h"
+#include "glUtils/Shader.h"
+#include "glUtils/Texture.h"
+#include "glUtils/Camera.h"
+#include "glUtils/RawModel.h"
 
 #include "easylogging++.h"
+#include "MyException.h"
 
 INITIALIZE_EASYLOGGINGPP
 

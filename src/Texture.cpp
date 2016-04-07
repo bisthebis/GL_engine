@@ -5,7 +5,8 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "Texture.h"
+#include "glUtils/Texture.h"
+
 #include "easylogging++.h"
 
 
