@@ -38,6 +38,11 @@ inline void getProjection(glm::mat4& target, float width, float height, bool ort
 
 void initCube(glUtils::RawModel& model);
 
+namespace TEST
+{
+    bool TEST_Camera() noexcept;
+}
+
 int main()
 {
 	sf::ContextSettings settings;
@@ -55,6 +60,12 @@ int main()
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 
+
+	///Context is valid : start tests
+    TEST::TEST_Camera();
+    //return 0;
+
+
 	glUtils::RawModel cube;
 	initCube(cube);
 
@@ -69,16 +80,16 @@ int main()
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
-	glm::mat4 models[5];
+	glm::mat4 models[6];
 	for (int i = 0; i < 5; ++i)
 	{
 		models[i] = glm::mat4(1.0f);
 		models[i] = glm::translate(models[i], glm::vec3(1.5f * i - 3.0f, 0.5f*i, 0));
 		models[i] = glm::rotate(models[i], i * 20.0f - 40.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	}
+	models[5] = glm::mat4(1.0f);
 
 	glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
-	camera.lookAt(view);
 
 	bool run = true;
 	bool orthographic = false;
@@ -164,7 +175,7 @@ int main()
 
 	glUniform1f(3, 0.5f + 0.5f*sin(time.getElapsedTime().asSeconds()));
 
-	for (int i = 0; i < 5; ++i)
+	for (int i = 0; i < 6; ++i)
 	{
 			glUniformMatrix4fv(2, 1, GL_FALSE, glm::value_ptr(models[i]));
 			glDrawArrays(GL_TRIANGLES, 0, 36);

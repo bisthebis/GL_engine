@@ -33,6 +33,10 @@ add_executable(
 	include/glUtils/RawModel.h
 	include/glUtils/Shader.h
 	include/glUtils/Texture.h
+	
+	
+	#Unit tests
+	src/glUtilsTesting/CameraTest.cpp
 
 )
 

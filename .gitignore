@@ -1,6 +1,12 @@
 *.o
-Programme
+Programme*
 logs
 ./logs/*
 gingercat.jpg
 CMakeFiles/*
+CMakeCache*
+*.dll
+*.so
+*.a
+*.lib
+*.exe

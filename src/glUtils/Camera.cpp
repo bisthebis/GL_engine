@@ -1,10 +1,17 @@
 #include "glUtils/Camera.h"
+#include "MyException.h"
+
+#include <iostream>
 
 namespace glUtils
 {
-	Camera::Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical) :  m_theta(-135), m_phi(-35.26), m_orientation(), m_axeVertical(axeVertical),
+	Camera::Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical) :  m_theta(0), m_phi(0), m_orientation(), m_axeVertical(axeVertical),
 																					  m_deplacementLateral(), m_position(position), m_pointCible(pointCible)
 	{
+	    if((m_axeVertical != glm::vec3(1,0,0)) && (m_axeVertical != glm::vec3(0,1,0)) && (m_axeVertical != glm::vec3(0,0,1)))
+            throw MyException("Invalid axe !");
+
+	    computeAngles();
         orienter (0, 0);
 	}
 	Camera::~Camera()
@@ -18,6 +25,7 @@ namespace glUtils
 
 		m_phi += -yRel * 0.5;
 		m_theta += -xRel * 0.5;
+		std::cout << "Angles changed : (Theta, Phi) = (" << m_theta << ',' << m_phi << ")" << std::endl;
 
 		if(m_phi == 90.0)
 			m_phi += -yRel * 0.5;
@@ -63,6 +71,7 @@ namespace glUtils
 
 	void Camera::lookAt(glm::mat4 &modelview)
 	{
+
 		modelview = glm::lookAt(m_position, m_pointCible, m_axeVertical);
 	}
 
@@ -100,5 +109,39 @@ namespace glUtils
 			m_position = m_position - m_axeVertical * 0.5f;
 			m_pointCible = m_position + m_orientation;
 		}
+	}
+
+	void Camera::computeAngles()
+	{
+	    m_orientation = glm::normalize(m_pointCible - m_position);
+        m_pointCible = m_position + m_orientation; //New m_pointCible is on the line from position to old pointCible
+
+
+	    if(m_axeVertical.x == 1.0)
+		{
+			float phiRadian = asin(m_orientation.x);
+			float thetaRadian = acos(m_orientation.y / cos(phiRadian));
+
+			m_phi = 180 * phiRadian / M_PI;
+			m_theta = 180 * thetaRadian / M_PI;
+		}
+
+		else if(m_axeVertical.y == 1.0)
+		{
+			float phiRadian = asin(m_orientation.y);
+			float thetaRadian = acos(m_orientation.z / cos(phiRadian));
+
+			m_phi = 180 * phiRadian / M_PI;
+			m_theta = 180 * thetaRadian / M_PI;
+		}
+		else
+		{
+			float phiRadian = asin(m_orientation.z);
+			float thetaRadian = acos(m_orientation.y / cos(phiRadian));
+
+			m_phi = 180 * phiRadian / M_PI;
+			m_theta = 180 * thetaRadian / M_PI;
+		}
+
 	}
 }

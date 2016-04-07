@@ -15,6 +15,9 @@ namespace glUtils
 
 	class Camera
 	{
+	    friend bool TEST_Camera() noexcept;
+
+
 		public:
 			Camera() = delete;
 			Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical);
@@ -27,12 +30,14 @@ namespace glUtils
 
 		protected:
 		private:
+		    ///Updated 7 april
+		    void computeAngles();
 
 			float m_theta, m_phi; //Theta = horizontal axe, Phi = vertical axe
 			glm::vec3 m_orientation;
 
 
-			glm::vec3 m_axeVertical;
+			const glm::vec3 m_axeVertical;
 			glm::vec3 m_deplacementLateral;
 
 			glm::vec3 m_position;
