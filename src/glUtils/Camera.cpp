@@ -1,5 +1,6 @@
 #include "glUtils/Camera.h"
 #include "MyException.h"
+#include "easylogging++.h"
 
 #include <iostream>
 
@@ -78,7 +79,7 @@ namespace glUtils
 	void Camera::deplacer(CameraDirection direction)
 	{
 
-        if(direction == CameraDirection::UP)
+    if(direction == CameraDirection::UP)
 		{
 			m_position = m_position + m_orientation * 0.5f;
 			m_pointCible = m_position + m_orientation;
@@ -114,13 +115,17 @@ namespace glUtils
 	void Camera::computeAngles()
 	{
 	    m_orientation = glm::normalize(m_pointCible - m_position);
-        m_pointCible = m_position + m_orientation; //New m_pointCible is on the line from position to old pointCible
+			DEBUG();
+      m_pointCible = m_position + m_orientation; //New m_pointCible is on the line from position to old pointCible
+			LOG(INFO) << "orientation : " << m_orientation.x << ' ' << m_orientation.y << ' ' << m_orientation.z;
 
-
-	    if(m_axeVertical.x == 1.0)
+	  if(m_axeVertical.x == 1.0)
 		{
 			float phiRadian = asin(m_orientation.x);
 			float thetaRadian = acos(m_orientation.y / cos(phiRadian));
+			if(m_orientation.y < 0)
+			thetaRadian *= -1;
+
 
 			m_phi = 180 * phiRadian / M_PI;
 			m_theta = 180 * thetaRadian / M_PI;
@@ -130,6 +135,8 @@ namespace glUtils
 		{
 			float phiRadian = asin(m_orientation.y);
 			float thetaRadian = acos(m_orientation.z / cos(phiRadian));
+			if(m_orientation.z < 0)
+			thetaRadian *= -1;
 
 			m_phi = 180 * phiRadian / M_PI;
 			m_theta = 180 * thetaRadian / M_PI;
@@ -137,11 +144,21 @@ namespace glUtils
 		else
 		{
 			float phiRadian = asin(m_orientation.z);
-			float thetaRadian = acos(m_orientation.y / cos(phiRadian));
+			float thetaRadian = acos(m_orientation.z / cos(phiRadian));
+			if(m_orientation.z < 0)
+			thetaRadian *= -1;
+
 
 			m_phi = 180 * phiRadian / M_PI;
 			m_theta = 180 * thetaRadian / M_PI;
 		}
 
+	}
+
+	void Camera::setCible(glm::vec3 pointCible)
+	{
+		this->m_pointCible = pointCible;
+		computeAngles();
+		orienter(0,0);
 	}
 }

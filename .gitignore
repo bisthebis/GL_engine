@@ -10,3 +10,6 @@ CMakeCache*
 *.a
 *.lib
 *.exe
+Makefile
+makefile
+cmake_install*

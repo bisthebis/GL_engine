@@ -38,8 +38,13 @@ namespace TEST
             cerr << "Exception dans le test : " << e.what() << endl;
         }
 
-        check_camera_equals_lookat(glm::vec3(5,7,3), glm::vec3(17,-90.5,32), glm::vec3(1,0,0));
-        check_camera_equals_lookat(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
+        check_camera_equals_lookat(glm::vec3(5,7,3), glm::vec3(17,-90.5,32), glm::vec3(1,0,0)); ///broken
+        check_camera_equals_lookat(glm::vec3(5,7,3), glm::vec3(17,-90.5,32), glm::vec3(0,1,0)); ///OK
+        check_camera_equals_lookat(glm::vec3(5,7,3), glm::vec3(17,-90.5,32), glm::vec3(0,0,1)); ///broken
+
+        check_camera_equals_lookat(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(1,0,0)); ///OK
+        check_camera_equals_lookat(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0)); ///OK
+        check_camera_equals_lookat(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1)); ///OK
 
 
 

@@ -62,7 +62,7 @@ int main()
 
 
 	///Context is valid : start tests
-    TEST::TEST_Camera();
+  	TEST::TEST_Camera();
     //return 0;
 
 
@@ -89,7 +89,7 @@ int main()
 	}
 	models[5] = glm::mat4(1.0f);
 
-	glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+	glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,1,0));
 
 	bool run = true;
 	bool orthographic = false;
@@ -139,6 +139,13 @@ int main()
 						case sf::Keyboard::Key::P:
 							orthographic = !orthographic;
 							getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
+
+						case sf::Keyboard::Key::M:
+							camera.setCible(glm::vec3(0,0,0));
+							break;
+						case sf::Keyboard::Key::L:
+							camera.DEBUG();
+							break;
 
 						default:
 							break;
