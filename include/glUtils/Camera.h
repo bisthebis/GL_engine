@@ -28,13 +28,12 @@ namespace glUtils
 		protected:
 		private:
 
-			float m_theta, m_phi; //H et V
+			float m_theta, m_phi; //Theta = horizontal axe, Phi = vertical axe
 			glm::vec3 m_orientation;
 
-			// Attributs de déplacement
 
 			glm::vec3 m_axeVertical;
-			glm::vec3 m_deplacementLateral; //Normale du plan
+			glm::vec3 m_deplacementLateral;
 
 			glm::vec3 m_position;
 			glm::vec3 m_pointCible;
