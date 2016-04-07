@@ -16,12 +16,15 @@ include_directories(include)
 
 add_executable(
 	Programme
-	src/Camera.cpp
+	
 	src/main.cpp
+	
 	src/MyException.cpp
-	src/RawModel.cpp
-	src/Shader.cpp
-	src/Texture.cpp
+	
+	src/glUtils/Camera.cpp
+	src/glUtils/RawModel.cpp
+	src/glUtils/Shader.cpp
+	src/glUtils/Texture.cpp
 
 	include/easylogging++.h
 	include/MyException.h
