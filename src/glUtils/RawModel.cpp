@@ -5,18 +5,17 @@
 #include "glUtils/RawModel.h"
 
 #include "MyException.h"
-#include "easylogging++.h"
+
 
 namespace glUtils
 {
 
-  RawModel::RawModel() : VBOs(0) {LOG(INFO) << "Creating a RawModel";}
+  RawModel::RawModel() : VBOs(0) {}
   RawModel::~RawModel() {this->cleanup();}
   void RawModel::cleanup()
   {
     if(glIsVertexArray(VAO))
     {
-      LOG(INFO) << "Deleting a VAO : " << VAO;
       glDeleteVertexArrays(1, &VAO);
     }
 
@@ -27,7 +26,6 @@ namespace glUtils
     {
       if(glIsBuffer(VBO))
       {
-        LOG(INFO) << "Deleting a VBO : " << VBO;
         glDeleteBuffers(1, &VBO);
       }
 

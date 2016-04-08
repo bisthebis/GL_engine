@@ -4,13 +4,11 @@
 #include "glUtils/Shader.h"
 
 #include "MyException.h"
-#include "easylogging++.h"
 
 namespace glUtils
 {
 	Shader::Shader(const std::string& vert, const std::string& frag) : vertexSource(vert), fragmentSource(frag)
 	{
-			LOG(INFO) << "Creating a shader. vertexSource : " << vertexSource << " and fragmentSource : " << fragmentSource;
 	}
 
 	Shader::Shader(Shader&& src)
@@ -18,7 +16,6 @@ namespace glUtils
 		std::swap(vertexSource, src.vertexSource);
 		std::swap(fragmentSource, src.fragmentSource);
 		ID = src.ID;
-		LOG(INFO) << "Move constructing a shader. vertexSource : " << vertexSource << " and fragmentSource : " << fragmentSource << ". ID : " << ID;
 		src.ID = 0; /*afin d'éviter que le programme ne soit détruit */
 	}
 
@@ -29,8 +26,6 @@ namespace glUtils
 		ID = src.ID;
 		src.ID = 0;
 
-		LOG(INFO) << "Move assigning a shader. vertexSource : " << vertexSource << " and fragmentSource : " << fragmentSource << ". ID : " << ID;
-
 
 		return *this; /*afin d'éviter que le programme ne soit détruit */
 	}
@@ -40,7 +35,6 @@ namespace glUtils
 		if(glIsProgram(ID))
 		{
 			glDeleteProgram(ID);
-			LOG(INFO) << "Deleting Shader";
 		}
 	}
 

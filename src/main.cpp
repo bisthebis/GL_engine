@@ -17,7 +17,6 @@
 #include "glUtils/Camera.h"
 #include "glUtils/RawModel.h"
 
-#include "easylogging++.h"
 #include "MyException.h"
 
 INITIALIZE_EASYLOGGINGPP

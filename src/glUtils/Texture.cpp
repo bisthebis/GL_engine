@@ -7,7 +7,6 @@
 
 #include "glUtils/Texture.h"
 
-#include "easylogging++.h"
 
 
 namespace glUtils
@@ -17,7 +16,6 @@ namespace glUtils
 		if(glIsTexture(TextureID))
 		{
 			glDeleteTextures(1, &TextureID);
-			LOG(INFO) << "Deleting Texture";
 		}
 
 	}
@@ -46,7 +44,7 @@ namespace glUtils
 
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img.getPixelsPtr());
 
-			LOG(INFO) << "Successfully loaded texture from : " << src;
+			//LOG(INFO) << "Successfully loaded texture from : " << src;
 
 	}
 

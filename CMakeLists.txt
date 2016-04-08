@@ -17,7 +17,7 @@ include_directories(include)
 add_executable(
 	Programme
 	
-	src/main.cpp
+	src/test_main.cpp
 	
 	src/MyException.cpp
 	
@@ -26,7 +26,7 @@ add_executable(
 	src/glUtils/Shader.cpp
 	src/glUtils/Texture.cpp
 
-	include/easylogging++.h
+#	include/easylogging++.h
 	include/MyException.h
 	
 	include/glUtils/Camera.h
