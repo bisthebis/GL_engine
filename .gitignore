@@ -4,3 +4,6 @@ logs
 ./logs/*
 gingercat.jpg
 CMakeFiles/*
+CMake*
+Makefile
+cmake_install*
