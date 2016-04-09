@@ -17,11 +17,11 @@ namespace glUtils
 	{
 		public:
 			Camera() = delete;
-			Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical);
+			Camera(const glm::vec3& position, const glm::vec3& pointCible, const glm::vec3& axeVertical);
 			virtual ~Camera();
 
 			void orienter(float xRel, float yRel);
-			void lookAt(glm::mat4 &modelview);
+			glm::mat4 lookAt();
 
 			void deplacer(CameraDirection direction);
 

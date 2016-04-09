@@ -2,7 +2,7 @@
 
 namespace glUtils
 {
-	Camera::Camera(glm::vec3 position, glm::vec3 pointCible, glm::vec3 axeVertical) :  m_theta(-135), m_phi(-35.26), m_orientation(), m_axeVertical(axeVertical),
+	Camera::Camera(const glm::vec3& position, const glm::vec3& pointCible, const glm::vec3& axeVertical) :  m_theta(-135), m_phi(-35.26), m_orientation(), m_axeVertical(axeVertical),
 																					  m_deplacementLateral(), m_position(position), m_pointCible(pointCible)
 	{
         orienter (0, 0);
@@ -61,9 +61,9 @@ namespace glUtils
 	}
 
 
-	void Camera::lookAt(glm::mat4 &modelview)
+	glm::mat4 Camera::lookAt()
 	{
-		modelview = glm::lookAt(m_position, m_pointCible, m_axeVertical);
+		return glm::lookAt(m_position, m_pointCible, m_axeVertical);
 	}
 
 	void Camera::deplacer(CameraDirection direction)

@@ -4,6 +4,20 @@
 
 #include <cmath>
 #include <algorithm>
+#include <string>
+#include <iostream>
+#include <vector>
+#include <sstream>
+
+
+struct LOOKAT_PARAMETERS
+{
+		glm::vec3 pos;
+		glm::vec3 target;
+		glm::vec3 axis;
+		LOOKAT_PARAMETERS(glm::vec3 pos, glm::vec3 target, glm::vec3 axis) : pos(pos), target(target), axis(axis) {}
+};
+
 
 bool sameMatrix(const glm::mat4& lhs, const glm::mat4& rhs, float precision)
 {
@@ -21,4 +35,11 @@ bool sameMatrix(const glm::mat4& lhs, const glm::mat4& rhs, float precision)
 
 
     return true;
+}
+
+std::string vecToString(glm::vec3 src)
+{
+  std::ostringstream ss;
+  ss << '(' << src.x << ',' << src.y << ',' << src.z << ')';
+  return ss.str();
 }

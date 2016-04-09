@@ -75,7 +75,7 @@ int main()
 	}
 
 	glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
-	camera.lookAt(view);
+	view = camera.lookAt();
 
 	bool run = true;
 	bool orthographic = false;
@@ -147,7 +147,7 @@ int main()
 
 	cube.bindVAO();
 
-	camera.lookAt(view);
+	view = camera.lookAt();
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
