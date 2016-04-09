@@ -2,7 +2,7 @@
 
 
 #include "glUtils/Camera.h"
-#include "glUtilsTesting/testHelper.hpp"
+#include "glUtilsTest/testHelper.h"
 
 BOOST_AUTO_TEST_SUITE(Camera)
 
@@ -36,4 +36,3 @@ BOOST_AUTO_TEST_CASE (autofail)
 }
 
 BOOST_AUTO_TEST_SUITE_END()
-
