@@ -21,7 +21,7 @@ include_directories(include)
 add_executable(
 	App
 
-	src/real_main.cpp 
+	src/real_main.cpp
 
 	src/MyException.cpp
 
@@ -44,7 +44,13 @@ target_link_libraries(App ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${SFML_LIBRARIES
 	add_executable(
 		Tests
 
-		src/test_main.cpp 
+		src/test_main.cpp
+
+		include/glUtilsTest/testHelper.h
+
+		src/glUtilsTest/CameraTest.cpp
+		src/glUtilsTest/TrivialTest.cpp
+		src/glUtilsTest/testHelper.cpp
 
 		src/MyException.cpp
 		src/glUtils/Camera.cpp
