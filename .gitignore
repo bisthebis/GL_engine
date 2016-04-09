@@ -1,5 +1,7 @@
 *.o
 Programme
+App
+Tests
 logs
 ./logs/*
 gingercat.jpg
