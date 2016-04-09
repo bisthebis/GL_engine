@@ -1,11 +1,13 @@
-#define BOOST_TEST_MODULE example
+#define BOOST_TEST_MODULE GLOBAL_TEST
 #include <boost/test/included/unit_test.hpp>
 #include <iostream>
 
 #include "glUtils/Camera.h"
 #include "glUtilsTesting/testHelper.hpp"
 
-BOOST_AUTO_TEST_CASE( default_constructed_cameras )
+
+
+BOOST_AUTO_TEST_CASE( Constructed_Camera_Equals_lookAt )
 {
 	glm::mat4 expected[2], actual[2];
 
