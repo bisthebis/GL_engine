@@ -9,3 +9,11 @@ CMakeFiles/*
 CMake*
 Makefile
 cmake_install*
+*.cbp
+*.layout
+*.dll
+*.so
+*.a
+*.lib
+*.exe
+src/main.cpp
