@@ -10,14 +10,18 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH}) 
 find_package(SFML 2 REQUIRED system window graphics)
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
+
+# Get Boost
+find_package ( Boost COMPONENTS unit_test_framework )
+
 include_directories(${SFML_INCLUDE_DIR} ${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS})
 include_directories(include)
 
 
 add_executable(
-	Programme
+	App
 
-	src/main.cpp #Is either real_main or test_main depending on build Script
+	src/real_main.cpp 
 
 	src/MyException.cpp
 
@@ -28,13 +32,28 @@ add_executable(
 
 	include/MyException.h
 
-	include/glUtilsTesting/testHelper.hpp
-
 	include/glUtils/Camera.h
 	include/glUtils/RawModel.h
 	include/glUtils/Shader.h
 	include/glUtils/Texture.h
 
 )
+target_link_libraries(App ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${SFML_LIBRARIES})
 
-target_link_libraries(Programme ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${SFML_LIBRARIES})
+#if (Boost_FOUND)
+	add_executable(
+		Tests
+
+		src/test_main.cpp 
+
+		src/MyException.cpp
+		src/glUtils/Camera.cpp
+		src/glUtils/RawModel.cpp
+		src/glUtils/Shader.cpp
+		src/glUtils/Texture.cpp
+
+	)
+
+
+	target_link_libraries(Tests ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${SFML_LIBRARIES})
+#endif()
