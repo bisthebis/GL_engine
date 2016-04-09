@@ -19,8 +19,6 @@
 
 #include "MyException.h"
 
-INITIALIZE_EASYLOGGINGPP
-
 inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false, const float zFar = 50.0f)
 {
 		if(!orthographic)

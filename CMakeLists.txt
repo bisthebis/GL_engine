@@ -16,19 +16,20 @@ include_directories(include)
 
 add_executable(
 	Programme
-	
-	src/test_main.cpp
-	
+
+	src/main.cpp #Is either real_main or test_main depending on build Script
+
 	src/MyException.cpp
-	
+
 	src/glUtils/Camera.cpp
 	src/glUtils/RawModel.cpp
 	src/glUtils/Shader.cpp
 	src/glUtils/Texture.cpp
 
-#	include/easylogging++.h
 	include/MyException.h
-	
+
+	include/glUtilsTesting/testHelper.hpp
+
 	include/glUtils/Camera.h
 	include/glUtils/RawModel.h
 	include/glUtils/Shader.h
