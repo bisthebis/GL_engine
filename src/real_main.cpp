@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <memory>
+#include <functional>
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 
@@ -74,8 +76,11 @@ int main()
 		models[i] = glm::rotate(models[i], i * 20.0f - 40.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	}
 
-	glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
-	view = camera.lookAt();
+    glUtils::Camera MyCamera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+    glUtils::DebugCamera MyCameraD(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+    std::reference_wrapper<glUtils::ICamera> camera(MyCamera);
+    camera = std::reference_wrapper<glUtils::ICamera>(MyCameraD);
+    view = camera.get().lookAt();
 
 	bool run = true;
 	bool orthographic = false;
@@ -98,28 +103,28 @@ int main()
 					switch (event.key.code)
 					{
 						case sf::Keyboard::Key::Z:
-							camera.deplacer(CameraDirection::UP);
+                            camera.get().deplacer(CameraDirection::UP);
 							break;
 						case sf::Keyboard::Key::S:
-							camera.deplacer(CameraDirection::DOWN);
+                            camera.get().deplacer(CameraDirection::DOWN);
 							break;
 						case sf::Keyboard::Key::Q:
-							camera.deplacer(CameraDirection::LEFT);
+                            camera.get().deplacer(CameraDirection::LEFT);
 							break;
 						case sf::Keyboard::Key::D:
-							camera.deplacer(CameraDirection::RIGHT);
+                            camera.get().deplacer(CameraDirection::RIGHT);
 							break;
 						case sf::Keyboard::Key::A:
-							camera.orienter(-5.0f, 0.0f);
+                            camera.get().orienter(-5.0f, 0.0f);
 							break;
 						case sf::Keyboard::Key::E:
-							camera.orienter(5.0f, 0.0f);
+                            camera.get().orienter(5.0f, 0.0f);
 							break;
 						case sf::Keyboard::Key::C:
-							camera.orienter(0.0f, -5.0f);
+                            camera.get().orienter(0.0f, -5.0f);
 							break;
 						case sf::Keyboard::Key::X:
-							camera.orienter(0.0f, 5.0f);
+                            camera.get().orienter(0.0f, 5.0f);
 							break;
 
 						case sf::Keyboard::Key::P:
@@ -147,7 +152,7 @@ int main()
 
 	cube.bindVAO();
 
-	view = camera.lookAt();
+    view = camera.get().lookAt();
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));

@@ -6,14 +6,15 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <cmath>
+#include <iostream>
 
+#include "glUtils/ICamera.h"
 
-enum class CameraDirection : char {UP, DOWN, LEFT, RIGHT, TOP, BOTTOM};
 
 namespace glUtils
 {
 
-	class Camera
+    class Camera : public ICamera
 	{
 		public:
 			Camera() = delete;
@@ -24,9 +25,9 @@ namespace glUtils
 			glm::mat4 lookAt();
 
 			void deplacer(CameraDirection direction);
+            void setTarget(glm::vec3 pos) {};
 
 		protected:
-		private:
 
 			float m_theta, m_phi; //Theta = horizontal axe, Phi = vertical axe
 			glm::vec3 m_orientation;
@@ -38,5 +39,13 @@ namespace glUtils
 			glm::vec3 m_position;
 			glm::vec3 m_pointCible;
 	};
+
+
+    ///TMP
+    struct DebugCamera : public Camera
+    {
+        DebugCamera(const glm::vec3& position, const glm::vec3& pointCible, const glm::vec3& axeVertical) : Camera(position, pointCible, axeVertical) {}
+        glm::mat4 lookAt(){std::cout << "Matrix update" << std::endl; return glm::lookAt(m_position, m_pointCible, m_axeVertical);}
+    };
 }
 #endif // CAMERA_H

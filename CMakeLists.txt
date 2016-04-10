@@ -32,6 +32,7 @@ add_executable(
 
 	include/MyException.h
 
+	include/glUtils/ICamera.h
 	include/glUtils/Camera.h
 	include/glUtils/RawModel.h
 	include/glUtils/Shader.h
