@@ -45,7 +45,7 @@ namespace glUtils
     struct DebugCamera : public Camera
     {
         DebugCamera(const glm::vec3& position, const glm::vec3& pointCible, const glm::vec3& axeVertical) : Camera(position, pointCible, axeVertical) {}
-        glm::mat4 lookAt(){std::cout << "Matrix update" << std::endl; return glm::lookAt(m_position, m_pointCible, m_axeVertical);}
+        glm::mat4 lookAt(){return this->Camera::lookAt();}
     };
 }
 #endif // CAMERA_H
