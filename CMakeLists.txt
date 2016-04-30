@@ -20,10 +20,12 @@ include_directories(include)
 
 add_executable(
 	App
+        config.lua
 
 	src/real_main.cpp
 
 	src/MyException.cpp
+	src/LuaState.cpp
 
 	src/glUtils/Camera.cpp
 	src/glUtils/RawModel.cpp
@@ -31,6 +33,7 @@ add_executable(
 	src/glUtils/Texture.cpp
 
 	include/MyException.h
+	include/LuaState.h
 
 	include/glUtils/ICamera.h
 	include/glUtils/Camera.h
@@ -64,3 +67,6 @@ target_link_libraries(App ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${SFML_LIBRARIES
 
 	target_link_libraries(Tests ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${SFML_LIBRARIES})
 #endif()
+
+
+TARGET_LINK_LIBRARIES(App lua)

@@ -20,6 +20,8 @@
 #include "glUtils/RawModel.h"
 
 #include "MyException.h"
+#include "LuaState.h"
+
 
 inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false, const float zFar = 50.0f)
 {
@@ -49,8 +51,19 @@ int main()
 	sf::Clock time;
 
 
+    //Read window size from Lua : config.lua
 
-	sf::Window window(sf::VideoMode(500, 500), "OpenGL works!", sf::Style::Default, settings);
+    int width(500), height(500);
+    {
+        LuaState Lua;
+        luaL_dofile(Lua(), "config.lua");
+        lua_getglobal(Lua(), "width");
+        lua_getglobal(Lua(), "height");
+        width = lua_tointeger(Lua(), -2);
+        height = lua_tointeger(Lua(), -1);
+    }
+
+    sf::Window window(sf::VideoMode(width, height), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 
@@ -64,7 +77,7 @@ int main()
 
 	glUtils::Texture text, text2;
 	text.loadFromFile("container.png");
-	text2.loadFromFile("cat.png");
+    text2.loadFromFile("cat.png");
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
@@ -76,23 +89,22 @@ int main()
 		models[i] = glm::rotate(models[i], i * 20.0f - 40.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	}
 
-    glUtils::Camera MyCamera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
-    glUtils::DebugCamera MyCameraD(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
-    std::reference_wrapper<glUtils::ICamera> camera(MyCamera);
-    camera = std::reference_wrapper<glUtils::ICamera>(MyCameraD);
-    view = camera.get().lookAt();
+    glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+
 
 	bool run = true;
 	bool orthographic = false;
 	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
+    unsigned long eventCount = 0;
 	while (run)
 	{
 		sf::Event event;
-					while (window.pollEvent(event))
+        while (window.pollEvent(event))
 		{
+            std::cout << "event : " << ++eventCount << std::endl;
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape))
 			run = false;
-
+/*
 			switch (event.type)
 			{
 				case sf::Event::Closed:
@@ -103,28 +115,28 @@ int main()
 					switch (event.key.code)
 					{
 						case sf::Keyboard::Key::Z:
-                            camera.get().deplacer(CameraDirection::UP);
+                            camera.deplacer(CameraDirection::UP);
 							break;
 						case sf::Keyboard::Key::S:
-                            camera.get().deplacer(CameraDirection::DOWN);
+                            camera.deplacer(CameraDirection::DOWN);
 							break;
 						case sf::Keyboard::Key::Q:
-                            camera.get().deplacer(CameraDirection::LEFT);
+                            camera.deplacer(CameraDirection::LEFT);
 							break;
 						case sf::Keyboard::Key::D:
-                            camera.get().deplacer(CameraDirection::RIGHT);
+                            camera.deplacer(CameraDirection::RIGHT);
 							break;
 						case sf::Keyboard::Key::A:
-                            camera.get().orienter(-5.0f, 0.0f);
+                            camera.orienter(-5.0f, 0.0f);
 							break;
 						case sf::Keyboard::Key::E:
-                            camera.get().orienter(5.0f, 0.0f);
+                            camera.orienter(5.0f, 0.0f);
 							break;
 						case sf::Keyboard::Key::C:
-                            camera.get().orienter(0.0f, -5.0f);
+                            camera.orienter(0.0f, -5.0f);
 							break;
 						case sf::Keyboard::Key::X:
-                            camera.get().orienter(0.0f, 5.0f);
+                            camera.orienter(0.0f, 5.0f);
 							break;
 
 						case sf::Keyboard::Key::P:
@@ -140,19 +152,20 @@ int main()
 				case sf::Event::Resized:
 				glViewport(0, 0, event.size.width, event.size.height);
 				getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
+                break;
 
 
 				default:
 				break;
-			}
+            }*/
 		}
 
-	glClearColor(0, 0.5, 1, 1);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(0, 0.5, 1, 1);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	cube.bindVAO();
+    cube.bindVAO();
 
-    view = camera.get().lookAt();
+    view = camera.lookAt();
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
@@ -164,7 +177,9 @@ int main()
 	glUniform1i(glGetUniformLocation(shader.getProgramID(), "myTexture2"), 1);
 	glBindTexture(GL_TEXTURE_2D, text2.getProgramID());
 
-	glUniform1f(3, 0.5f + 0.5f*sin(time.getElapsedTime().asSeconds()));
+    //glUniform1f(3, 0.5f + 0.5f*sin(time.getElapsedTime().asSeconds()));
+    glUniform1f(3, 0.5f);
+
 
 	for (int i = 0; i < 5; ++i)
 	{
@@ -173,7 +188,8 @@ int main()
 	}
 
 
-	window.display();
+
+    window.display();
 	}
 
 
