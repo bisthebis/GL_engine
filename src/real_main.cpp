@@ -104,7 +104,7 @@ int main()
             std::cout << "event : " << ++eventCount << std::endl;
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape))
 			run = false;
-/*
+
 			switch (event.type)
 			{
 				case sf::Event::Closed:
@@ -157,7 +157,7 @@ int main()
 
 				default:
 				break;
-            }*/
+            }
 		}
 
     glClearColor(0, 0.5, 1, 1);
@@ -177,8 +177,7 @@ int main()
 	glUniform1i(glGetUniformLocation(shader.getProgramID(), "myTexture2"), 1);
 	glBindTexture(GL_TEXTURE_2D, text2.getProgramID());
 
-    //glUniform1f(3, 0.5f + 0.5f*sin(time.getElapsedTime().asSeconds()));
-    glUniform1f(3, 0.5f);
+    glUniform1f(3, std::max(0.5f + 0.5f*sin(time.getElapsedTime().asSeconds()), 0.0));
 
 
 	for (int i = 0; i < 5; ++i)
