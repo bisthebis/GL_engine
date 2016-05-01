@@ -13,6 +13,10 @@ int Lua_API_switchProjectionType(lua_State* L)
 
     return 0;
 }
+int Lua_API_stopRunning(lua_State* L)
+{
+    run = false;
+}
 int Lua_API_getCamera(lua_State* L)
 {
 
@@ -38,5 +42,3 @@ int Lua_API_rotateCamera(lua_State* L)
 
     return 0;
 }
-
-

@@ -45,6 +45,7 @@ inline void getProjection(glm::mat4& target, float width, float height, bool ort
 void initCube(glUtils::RawModel& model);
 
 bool orthographic = false; /*Lua Globals declared in LuaApi.h */
+bool run = true;
 glUtils::Camera *global_camera = nullptr;
 
 int main()
@@ -57,7 +58,6 @@ int main()
 	settings.minorVersion = 5;
 
 	sf::Clock time;
-
 
     //Read window size from Lua : config.lua
 
@@ -74,6 +74,7 @@ int main()
         lua_register(Lua(), "switchProjectionType", &Lua_API_switchProjectionType);
         lua_register(Lua(), "pushCamera", &Lua_API_moveCamera);
         lua_register(Lua(), "rotateCamera", &Lua_API_rotateCamera);
+				lua_register(Lua(), "quit", &Lua_API_stopRunning);
 
         Lua.doProcedure("init");
 
@@ -115,16 +116,13 @@ int main()
 
 
 
-	bool run = true;
-
 	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 	while (run)
 	{
 		sf::Event event;
         while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape))
-			run = false;
+
 
 			switch (event.type)
 			{

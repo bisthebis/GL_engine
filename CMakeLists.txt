@@ -33,6 +33,7 @@ add_executable(
 	src/glUtils/RawModel.cpp
 	src/glUtils/Shader.cpp
 	src/glUtils/Texture.cpp
+	src/glUtils/ObjLoader.cpp
 
 	include/MyException.h
 	include/LuaState.h
@@ -43,6 +44,7 @@ add_executable(
 	include/glUtils/RawModel.h
 	include/glUtils/Shader.h
 	include/glUtils/Texture.h
+	include/glUtils/ObjLoader.h
 
 )
 target_link_libraries(App ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${SFML_LIBRARIES})

@@ -14,8 +14,6 @@ namespace glUtils
 }
 
 
-
-
 namespace glUtils
 {
 
