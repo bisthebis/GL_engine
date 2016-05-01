@@ -22,6 +22,11 @@
 #include "MyException.h"
 #include "LuaState.h"
 
+using std::cout;
+using std::endl;
+
+glUtils::Camera *global_camera = nullptr;
+int* ptr;
 
 inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false, const float zFar = 50.0f)
 {
@@ -35,6 +40,24 @@ inline void getProjection(glm::mat4& target, float width, float height, bool ort
 				else
 				target = glm::ortho(-2.0f, 2.0f, -2.0f / ratio, 2.0f / ratio, -2.0f, zFar);
 			}
+}
+
+int lua_getCamera(lua_State* L)
+{
+
+    lua_pushlightuserdata(L, global_camera);
+    return 1;
+}
+
+int lua_forwardCamera(lua_State* L)
+{
+
+
+    glUtils::Camera* camera = (glUtils::Camera*) lua_topointer(L, -2);
+    int direction = lua_tointeger(L, -1);
+    camera->deplacer(direction);
+
+    return 0;
 }
 
 void initCube(glUtils::RawModel& model);
@@ -53,15 +76,27 @@ int main()
 
     //Read window size from Lua : config.lua
 
+    glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+    global_camera = &camera;
+
+
     int width(500), height(500);
-    {
+
         LuaState Lua;
         luaL_dofile(Lua(), "config.lua");
+        lua_register(Lua(), "getCamera", &lua_getCamera);
+        lua_register(Lua(), "pushCamera", &lua_forwardCamera);
+
+        Lua.doProcedure("init");
+
         lua_getglobal(Lua(), "width");
         lua_getglobal(Lua(), "height");
         width = lua_tointeger(Lua(), -2);
         height = lua_tointeger(Lua(), -1);
-    }
+
+
+
+
 
     sf::Window window(sf::VideoMode(width, height), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
@@ -89,7 +124,7 @@ int main()
 		models[i] = glm::rotate(models[i], i * 20.0f - 40.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	}
 
-    glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+
 
 
 	bool run = true;
@@ -110,20 +145,29 @@ int main()
 				break;
 
 				case sf::Event::KeyPressed:
+                    lua_getglobal(Lua(), "handleKey");
+                    lua_pushinteger(Lua(), event.key.code);
+                    lua_pcall(Lua(), 1, 0, 0);
 					switch (event.key.code)
 					{
-						case sf::Keyboard::Key::Z:
-                            camera.deplacer(CameraDirection::UP);
-							break;
+                        /*case sf::Keyboard::Key::Z:
+                            lua_getglobal(Lua(), "advanceCamera");
+                            lua_pushinteger(Lua(), glUtils::UP);
+                            lua_pcall(Lua(), 1, 0, 0);
+
+
+                            break;
 						case sf::Keyboard::Key::S:
-                            camera.deplacer(CameraDirection::DOWN);
+                            lua_getglobal(Lua(), "advanceCamera");
+                            lua_pushinteger(Lua(), glUtils::DOWN);
+                            lua_pcall(Lua(), 1, 0, 0);
 							break;
 						case sf::Keyboard::Key::Q:
-                            camera.deplacer(CameraDirection::LEFT);
+                            camera.deplacer(glUtils::LEFT);
 							break;
 						case sf::Keyboard::Key::D:
-                            camera.deplacer(CameraDirection::RIGHT);
-							break;
+                            camera.deplacer(glUtils::RIGHT);
+                            break;*/
 						case sf::Keyboard::Key::A:
                             camera.orienter(-5.0f, 0.0f);
 							break;

@@ -8,8 +8,10 @@
 
 #include <cmath>
 
-enum class CameraDirection : char {UP, DOWN, LEFT, RIGHT, TOP, BOTTOM};
-
+namespace glUtils
+{
+    enum CameraDirection : int {UP, DOWN, LEFT, RIGHT, TOP, BOTTOM};
+}
 
 
 
@@ -27,7 +29,7 @@ namespace glUtils
 			void orienter(float xRel, float yRel);
 			glm::mat4 lookAt();
 
-			void deplacer(CameraDirection direction);
+            void deplacer(int direction);
             void setTarget(glm::vec3 pos) {};
 
 		protected:

@@ -15,6 +15,8 @@ class LuaState
 
         lua_State* operator()();
 
+        void doProcedure(const char* name, int N_args = 0);
+
 };
 
 #endif
