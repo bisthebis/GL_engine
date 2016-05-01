@@ -27,6 +27,8 @@ add_executable(
 	src/MyException.cpp
 	src/LuaState.cpp
 
+	src/luaApi/LuaApi.cpp
+
 	src/glUtils/Camera.cpp
 	src/glUtils/RawModel.cpp
 	src/glUtils/Shader.cpp
@@ -34,6 +36,8 @@ add_executable(
 
 	include/MyException.h
 	include/LuaState.h
+
+	include/luaApi/LuaApi.h
 
 	include/glUtils/Camera.h
 	include/glUtils/RawModel.h

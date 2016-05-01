@@ -19,14 +19,13 @@
 #include "glUtils/Camera.h"
 #include "glUtils/RawModel.h"
 
+#include "luaApi/LuaApi.h"
+
 #include "MyException.h"
 #include "LuaState.h"
 
 using std::cout;
 using std::endl;
-
-glUtils::Camera *global_camera = nullptr;
-int* ptr;
 
 inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false, const float zFar = 50.0f)
 {
@@ -42,25 +41,11 @@ inline void getProjection(glm::mat4& target, float width, float height, bool ort
 			}
 }
 
-int lua_getCamera(lua_State* L)
-{
-
-    lua_pushlightuserdata(L, global_camera);
-    return 1;
-}
-
-int lua_forwardCamera(lua_State* L)
-{
-
-
-    glUtils::Camera* camera = (glUtils::Camera*) lua_topointer(L, -2);
-    int direction = lua_tointeger(L, -1);
-    camera->deplacer(direction);
-
-    return 0;
-}
 
 void initCube(glUtils::RawModel& model);
+
+bool orthographic = false; /*Lua Globals declared in LuaApi.h */
+glUtils::Camera *global_camera = nullptr;
 
 int main()
 {
@@ -84,8 +69,11 @@ int main()
 
         LuaState Lua;
         luaL_dofile(Lua(), "config.lua");
-        lua_register(Lua(), "getCamera", &lua_getCamera);
-        lua_register(Lua(), "pushCamera", &lua_forwardCamera);
+        lua_register(Lua(), "getCamera", &Lua_API_getCamera);
+        lua_register(Lua(), "getProjectionType", &Lua_API_getProjectionType);
+        lua_register(Lua(), "switchProjectionType", &Lua_API_switchProjectionType);
+        lua_register(Lua(), "pushCamera", &Lua_API_moveCamera);
+        lua_register(Lua(), "rotateCamera", &Lua_API_rotateCamera);
 
         Lua.doProcedure("init");
 
@@ -112,7 +100,7 @@ int main()
 
 	glUtils::Texture text, text2;
 	text.loadFromFile("container.png");
-    text2.loadFromFile("cat.png");
+	text2.loadFromFile("cat.png");
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
@@ -128,7 +116,7 @@ int main()
 
 
 	bool run = true;
-	bool orthographic = false;
+
 	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 	while (run)
 	{
@@ -145,49 +133,9 @@ int main()
 				break;
 
 				case sf::Event::KeyPressed:
-                    lua_getglobal(Lua(), "handleKey");
+                    lua_getglobal(Lua(), "handleKey"); ///Let Lua handle keyboard
                     lua_pushinteger(Lua(), event.key.code);
                     lua_pcall(Lua(), 1, 0, 0);
-					switch (event.key.code)
-					{
-                        /*case sf::Keyboard::Key::Z:
-                            lua_getglobal(Lua(), "advanceCamera");
-                            lua_pushinteger(Lua(), glUtils::UP);
-                            lua_pcall(Lua(), 1, 0, 0);
-
-
-                            break;
-						case sf::Keyboard::Key::S:
-                            lua_getglobal(Lua(), "advanceCamera");
-                            lua_pushinteger(Lua(), glUtils::DOWN);
-                            lua_pcall(Lua(), 1, 0, 0);
-							break;
-						case sf::Keyboard::Key::Q:
-                            camera.deplacer(glUtils::LEFT);
-							break;
-						case sf::Keyboard::Key::D:
-                            camera.deplacer(glUtils::RIGHT);
-                            break;*/
-						case sf::Keyboard::Key::A:
-                            camera.orienter(-5.0f, 0.0f);
-							break;
-						case sf::Keyboard::Key::E:
-                            camera.orienter(5.0f, 0.0f);
-							break;
-						case sf::Keyboard::Key::C:
-                            camera.orienter(0.0f, -5.0f);
-							break;
-						case sf::Keyboard::Key::X:
-                            camera.orienter(0.0f, 5.0f);
-							break;
-
-						case sf::Keyboard::Key::P:
-							orthographic = !orthographic;
-							getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
-
-						default:
-							break;
-					}
 
 				break;
 
@@ -208,6 +156,7 @@ int main()
     cube.bindVAO();
 
     view = camera.lookAt();
+    getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
