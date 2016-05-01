@@ -12,13 +12,13 @@ end
 
 function handleKey(key)
     if SFML_KEY[key+1] == 'z' then
-        pushCamera(camera, 0)
+        pushCamera(camera, CAMERA_DIR.UP)
     elseif SFML_KEY[key+1] == 's' then
-        pushCamera(camera, 1)
+        pushCamera(camera, CAMERA_DIR.DOWN)
     elseif SFML_KEY[key+1] == 'q' then
-        pushCamera(camera, 2)
+        pushCamera(camera, CAMERA_DIR.LEFT)
     elseif SFML_KEY[key+1] == 'd' then
-        pushCamera(camera, 3)
+        pushCamera(camera, CAMERA_DIR.RIGHT)
     end
 
 end
