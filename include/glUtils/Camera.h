@@ -1,20 +1,23 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <cmath>
-#include <iostream>
 
-#include "glUtils/ICamera.h"
+enum class CameraDirection : char {UP, DOWN, LEFT, RIGHT, TOP, BOTTOM};
+
+
+
 
 
 namespace glUtils
 {
 
-    class Camera : public ICamera
+    class Camera
 	{
 		public:
 			Camera() = delete;
@@ -41,11 +44,5 @@ namespace glUtils
 	};
 
 
-    ///TMP
-    struct DebugCamera : public Camera
-    {
-        DebugCamera(const glm::vec3& position, const glm::vec3& pointCible, const glm::vec3& axeVertical) : Camera(position, pointCible, axeVertical) {}
-        glm::mat4 lookAt(){return this->Camera::lookAt();}
-    };
 }
 #endif // CAMERA_H

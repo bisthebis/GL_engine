@@ -95,13 +95,11 @@ int main()
 	bool run = true;
 	bool orthographic = false;
 	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
-    unsigned long eventCount = 0;
 	while (run)
 	{
 		sf::Event event;
         while (window.pollEvent(event))
 		{
-            std::cout << "event : " << ++eventCount << std::endl;
 			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape))
 			run = false;
 
