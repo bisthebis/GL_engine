@@ -1,19 +1,23 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
+
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include <cmath>
 
-
 enum class CameraDirection : char {UP, DOWN, LEFT, RIGHT, TOP, BOTTOM};
+
+
+
+
 
 namespace glUtils
 {
 
-	class Camera
+    class Camera
 	{
 		public:
 			Camera() = delete;
@@ -24,9 +28,9 @@ namespace glUtils
 			glm::mat4 lookAt();
 
 			void deplacer(CameraDirection direction);
+            void setTarget(glm::vec3 pos) {};
 
 		protected:
-		private:
 
 			float m_theta, m_phi; //Theta = horizontal axe, Phi = vertical axe
 			glm::vec3 m_orientation;
@@ -38,5 +42,7 @@ namespace glUtils
 			glm::vec3 m_position;
 			glm::vec3 m_pointCible;
 	};
+
+
 }
 #endif // CAMERA_H
