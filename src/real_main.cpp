@@ -18,6 +18,7 @@
 #include "glUtils/Texture.h"
 #include "glUtils/Camera.h"
 #include "glUtils/RawModel.h"
+#include "glUtils/ObjLoader.h"
 
 #include "luaApi/LuaApi.h"
 
@@ -59,6 +60,7 @@ int main()
 
 	sf::Clock time;
 
+
     //Read window size from Lua : config.lua
 
     glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
@@ -92,7 +94,26 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	glUtils::RawModel cube;
-	initCube(cube);
+    //initCube(cube);
+
+    GLuint VBO = glUtils::loadModel("cube.obj");
+    cout << VBO << endl;
+    GLuint VAO = 0;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), 0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), (char*)nullptr + 12 );
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    cube.setVAO(VAO);
+    cube.pushVBO(VBO);
 
 
 	glUtils::Shader shader("Shaders/Texture3D.vert", "Shaders/Texture2D.frag");
@@ -101,7 +122,7 @@ int main()
 
 	glUtils::Texture text, text2;
 	text.loadFromFile("container.png");
-	text2.loadFromFile("cat.png");
+    text2.loadFromFile("cube.png");
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
