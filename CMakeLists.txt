@@ -27,18 +27,24 @@ add_executable(
 	src/MyException.cpp
 	src/LuaState.cpp
 
+	src/luaApi/LuaApi.cpp
+
 	src/glUtils/Camera.cpp
 	src/glUtils/RawModel.cpp
 	src/glUtils/Shader.cpp
 	src/glUtils/Texture.cpp
+	src/glUtils/ObjLoader.cpp
 
 	include/MyException.h
 	include/LuaState.h
+
+	include/luaApi/LuaApi.h
 
 	include/glUtils/Camera.h
 	include/glUtils/RawModel.h
 	include/glUtils/Shader.h
 	include/glUtils/Texture.h
+	include/glUtils/ObjLoader.h
 
 )
 target_link_libraries(App ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${SFML_LIBRARIES})

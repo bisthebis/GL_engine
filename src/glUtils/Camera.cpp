@@ -67,7 +67,7 @@ namespace glUtils
 		return glm::lookAt(m_position, m_pointCible, m_axeVertical);
 	}
 
-	void Camera::deplacer(CameraDirection direction)
+    void Camera::deplacer(int direction)
 	{
 
         if(direction == CameraDirection::UP)

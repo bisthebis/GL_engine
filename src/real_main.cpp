@@ -18,10 +18,15 @@
 #include "glUtils/Texture.h"
 #include "glUtils/Camera.h"
 #include "glUtils/RawModel.h"
+#include "glUtils/ObjLoader.h"
+
+#include "luaApi/LuaApi.h"
 
 #include "MyException.h"
 #include "LuaState.h"
 
+using std::cout;
+using std::endl;
 
 inline void getProjection(glm::mat4& target, float width, float height, bool orthographic = false, const float zFar = 50.0f)
 {
@@ -37,7 +42,12 @@ inline void getProjection(glm::mat4& target, float width, float height, bool ort
 			}
 }
 
+
 void initCube(glUtils::RawModel& model);
+
+bool orthographic = false; /*Lua Globals declared in LuaApi.h */
+bool run = true;
+glUtils::Camera *global_camera = nullptr;
 
 int main()
 {
@@ -53,22 +63,57 @@ int main()
 
     //Read window size from Lua : config.lua
 
+    glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
+    global_camera = &camera;
+
+
     int width(500), height(500);
-    {
+
         LuaState Lua;
         luaL_dofile(Lua(), "config.lua");
+        lua_register(Lua(), "getCamera", &Lua_API_getCamera);
+        lua_register(Lua(), "getProjectionType", &Lua_API_getProjectionType);
+        lua_register(Lua(), "switchProjectionType", &Lua_API_switchProjectionType);
+        lua_register(Lua(), "pushCamera", &Lua_API_moveCamera);
+        lua_register(Lua(), "rotateCamera", &Lua_API_rotateCamera);
+				lua_register(Lua(), "quit", &Lua_API_stopRunning);
+
+        Lua.doProcedure("init");
+
         lua_getglobal(Lua(), "width");
         lua_getglobal(Lua(), "height");
         width = lua_tointeger(Lua(), -2);
         height = lua_tointeger(Lua(), -1);
-    }
+
+
+
+
 
     sf::Window window(sf::VideoMode(width, height), "OpenGL works!", sf::Style::Default, settings);
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 
 	glUtils::RawModel cube;
-	initCube(cube);
+    //initCube(cube);
+
+    GLuint VBO = glUtils::loadModel("cube.obj");
+    cout << VBO << endl;
+    GLuint VAO = 0;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), 0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), (char*)nullptr + 12 );
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    cube.setVAO(VAO);
+    cube.pushVBO(VBO);
 
 
 	glUtils::Shader shader("Shaders/Texture3D.vert", "Shaders/Texture2D.frag");
@@ -77,7 +122,7 @@ int main()
 
 	glUtils::Texture text, text2;
 	text.loadFromFile("container.png");
-    text2.loadFromFile("cat.png");
+    text2.loadFromFile("cube.png");
 
 	glm::mat4 projection = glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f, -2.0f, 10.0f);
 	glm::mat4 view;
@@ -89,19 +134,16 @@ int main()
 		models[i] = glm::rotate(models[i], i * 20.0f - 40.0f, glm::vec3(0.5f, 0.5f, 0.5f));
 	}
 
-    glUtils::Camera camera(glm::vec3(3,3,3), glm::vec3(0,0,0), glm::vec3(0,0,1));
 
 
-	bool run = true;
-	bool orthographic = false;
+
 	getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 	while (run)
 	{
 		sf::Event event;
         while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Escape))
-			run = false;
+
 
 			switch (event.type)
 			{
@@ -110,40 +152,9 @@ int main()
 				break;
 
 				case sf::Event::KeyPressed:
-					switch (event.key.code)
-					{
-						case sf::Keyboard::Key::Z:
-                            camera.deplacer(CameraDirection::UP);
-							break;
-						case sf::Keyboard::Key::S:
-                            camera.deplacer(CameraDirection::DOWN);
-							break;
-						case sf::Keyboard::Key::Q:
-                            camera.deplacer(CameraDirection::LEFT);
-							break;
-						case sf::Keyboard::Key::D:
-                            camera.deplacer(CameraDirection::RIGHT);
-							break;
-						case sf::Keyboard::Key::A:
-                            camera.orienter(-5.0f, 0.0f);
-							break;
-						case sf::Keyboard::Key::E:
-                            camera.orienter(5.0f, 0.0f);
-							break;
-						case sf::Keyboard::Key::C:
-                            camera.orienter(0.0f, -5.0f);
-							break;
-						case sf::Keyboard::Key::X:
-                            camera.orienter(0.0f, 5.0f);
-							break;
-
-						case sf::Keyboard::Key::P:
-							orthographic = !orthographic;
-							getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
-
-						default:
-							break;
-					}
+                    lua_getglobal(Lua(), "handleKey"); ///Let Lua handle keyboard
+                    lua_pushinteger(Lua(), event.key.code);
+                    lua_pcall(Lua(), 1, 0, 0);
 
 				break;
 
@@ -164,6 +175,7 @@ int main()
     cube.bindVAO();
 
     view = camera.lookAt();
+    getProjection(projection, window.getSize().x, window.getSize().y, orthographic);
 
 	glUniformMatrix4fv(0, 1, GL_FALSE, glm::value_ptr(projection));
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
