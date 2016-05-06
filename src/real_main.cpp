@@ -76,7 +76,7 @@ int main()
         lua_register(Lua(), "switchProjectionType", &Lua_API_switchProjectionType);
         lua_register(Lua(), "pushCamera", &Lua_API_moveCamera);
         lua_register(Lua(), "rotateCamera", &Lua_API_rotateCamera);
-				lua_register(Lua(), "quit", &Lua_API_stopRunning);
+        lua_register(Lua(), "quit", &Lua_API_stopRunning);
 
         Lua.doProcedure("init");
 
