@@ -109,6 +109,9 @@ int main()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), (char*)nullptr + 12 );
     glEnableVertexAttribArray(1);
 
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8*sizeof(GLfloat), (char*)nullptr + 20 );
+    glEnableVertexAttribArray(2);
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
@@ -116,7 +119,7 @@ int main()
     cube.pushVBO(VBO);
 
 
-	glUtils::Shader shader("Shaders/Texture3D.vert", "Shaders/Texture2D.frag");
+    glUtils::Shader shader("Shaders/SimpleLight3D.vert", "Shaders/SimpleLight3D.frag");
 	shader.charger();
 	glUseProgram(shader.getProgramID());
 
@@ -187,7 +190,7 @@ int main()
 	glUniform1i(glGetUniformLocation(shader.getProgramID(), "myTexture2"), 1);
 	glBindTexture(GL_TEXTURE_2D, text2.getProgramID());
 
-    glUniform1f(3, std::max(0.5f + 0.5f*sin(time.getElapsedTime().asSeconds()), 0.0));
+    glUniform3f(3, 0, 0, 5);
 
 
 	for (int i = 0; i < 5; ++i)
