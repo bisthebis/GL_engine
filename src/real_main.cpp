@@ -184,13 +184,20 @@ int main()
 	glUniformMatrix4fv(1, 1, GL_FALSE, glm::value_ptr(view));
 
 	glActiveTexture(GL_TEXTURE0);
-	glUniform1i(glGetUniformLocation(shader.getProgramID(), "myTexture"), 0);
+	glUniform1i(glGetUniformLocation(shader.getProgramID(), "DiffuseTexture"), 0);
 	glBindTexture(GL_TEXTURE_2D, text.getProgramID());
 	glActiveTexture(GL_TEXTURE1);
-	glUniform1i(glGetUniformLocation(shader.getProgramID(), "myTexture2"), 1);
+	glUniform1i(glGetUniformLocation(shader.getProgramID(), "SpecularTexture"), 1);
 	glBindTexture(GL_TEXTURE_2D, text2.getProgramID());
 
-    glUniform3f(3, 0, 0, 5);
+    lua_getglobal(Lua(), "LightPos_x"); const float x = lua_tonumber(Lua(), -1);
+    lua_getglobal(Lua(), "LightPos_y"); const float y = lua_tonumber(Lua(), -1);
+    lua_getglobal(Lua(), "LightPos_z"); const float z = lua_tonumber(Lua(), -1);
+    std::cout << x << ' ' << y << ' ' << z << ' ' << lua_gettop(Lua()) << std::endl;
+    lua_settop(Lua(), 0);
+
+
+    glUniform3f(3, x, y, z);
 
 
 	for (int i = 0; i < 5; ++i)
