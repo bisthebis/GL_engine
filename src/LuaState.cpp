@@ -6,7 +6,7 @@ LuaState::LuaState()
     _state = luaL_newstate();
 
     luaopen_base(_state);
-    luaopen_io(_state);
+    //luaopen_io(_state);
     luaopen_math(_state);
     luaopen_string(_state);
     assert(_state);
