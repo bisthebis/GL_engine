@@ -1,4 +1,4 @@
-#version 450 core
+#version 330 core
 
 in vec2 TexCoords;
 in vec3 Normals;
@@ -10,7 +10,7 @@ uniform sampler2D DiffuseText;
 uniform sampler2D SpecularText;
 
 
-layout (location = 3) uniform vec3 LightPos;
+uniform vec3 LightPos;
 
 
 void main()
@@ -18,7 +18,7 @@ void main()
 	//outColor = mix(texture(DiffuseText, TexCoords), texture(SpecularText, TexCoords), factor);
 	//outColor = Normals;
 	vec3 LightToObject = normalize(LightPos - fragPos);
-	const float LightReduction = 15.0 / length(LightPos - fragPos);
+	float LightReduction = 15.0 / length(LightPos - fragPos);
 	vec3 n = normalize(Normals);
 	outColor = LightReduction * max(dot(LightToObject, n), 0.2) * texture(DiffuseText, TexCoords);
 }
